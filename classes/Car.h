@@ -9,6 +9,11 @@ using namespace std;
 
 template <class T>
 class Car {
+    private:
+        T currentPoint;
+        T finishPoint;
+        Store owner;
+
     public:
         Car(){};
         Car(T start, T end){
@@ -16,19 +21,26 @@ class Car {
             finishPoint = end;
         };
         string name;
-        void nextTick(int tickCount){
-            cout   << "\t\t" <<  _str() <<": car.tick handler" <<endl;
-    //        carsIter.
+
+        void optimalWayTo(){
+            list<T> nears = currentPoint.nearRoads();
+
         };
 
-    string _str(){
-        auto s = "<Car " + name + ">";
-        return s;
-    };
+        bool canContinueDriving(){
 
-    private:
-        T currentPoint;
-        T finishPoint;
+        };
+
+        void nextTick(int tickCount){
+            cout   << "\t\t" <<  _str() <<": car.tick handler" <<endl;
+            currentPoint.nearRoads();
+        };
+        string _str(){
+            auto s = "<Car " + name + ">";
+            return s;
+        };
+
+
 
 
 

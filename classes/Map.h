@@ -41,6 +41,38 @@ class Map {
             cout << "sdf" << endl;
         };
 
+        list<Type> checkBranch(Type roadBranc, Type to,list<RoadObject> pathList, Type fromRoad){
+            pathList.push_back(fromRoad);
+            bool found = (std::find(pathList.begin(), pathList.end(), roadBranc) != pathList.end());
+            if (found){return pathList ;}
+            if (roadBranc.XCoord == -1 & roadBranc.YCoord == -1){return pathList ;}
+
+            if (roadBranc == to){
+                cout << "WAY BUILDED";
+                pathList.push_back(roadBranc);
+                return pathList;
+            }
+            return getPathList(roadBranc, to, pathList);
+            }
+
+
+        list<Type> getPathList(Type from, Type to, list<RoadObject> pathList){
+            list<Type> rightRoad = checkBranch(items[from.XCoord + 1][from.YCoord], to, pathList, from);
+            if ((std::find(rightRoad.begin(), rightRoad.end(), to) != rightRoad.end())){
+                return rightRoad;
+            }
+            list<Type> toLeft = checkBranch(items[from.XCoord - 1][from.YCoord], to, pathList, from);
+            list<Type> toBottom = checkBranch(items[from.XCoord][from.YCoord + 1], to, pathList, from);
+            list<Type> toTop = checkBranch(items[from.XCoord][from.YCoord-1], to, pathList, from);
+            return pathList;
+        };
+
+       void getPathList(Type from, Type to) {
+           list<RoadObject> a;
+           list<RoadObject> b = getPathList(from, to, a);
+       }
+
+
         void nextTick(int tickCount){
             cout << "MAP NextTick "<< tickCount << endl;
             for ( auto X : items )

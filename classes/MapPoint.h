@@ -53,7 +53,6 @@ public:
 
 
 class RoadObject:MapPoint{
-
 private:
     Barrier activeBarrier;
     int carMaxCount = 1;
@@ -66,10 +65,17 @@ public:
     using MapPoint::YCoord;
 
 
-    RoadObject() {XCoord=0;YCoord=0;};
+    RoadObject() {XCoord=-1;YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};
 
-    void nearRoadMapPoints(RoadObject exclude){};
+    bool operator== (const RoadObject other){
+        return this->XCoord == other.XCoord && this->YCoord == other.YCoord;
+    };
+
+
+    void nearRoads(){
+
+    };
 
     void canIncome(){};
     void serBarrier(){};
@@ -89,7 +95,7 @@ public:
 
     Car<RoadObject> startCar(RoadObject endPoint){
         Car<RoadObject> newCar = Car<RoadObject>(endPoint, endPoint);
-        newCar.name = to_string('generated') + to_string(cars.size());
+        newCar.name = to_string(cars.size());
         incomingCar(newCar, true);
         return newCar;
     };
@@ -106,6 +112,7 @@ public:
         }
     };
 };
+
 
 
 
