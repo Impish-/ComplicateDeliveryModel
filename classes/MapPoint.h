@@ -54,7 +54,6 @@ public:
 
 class RoadObject:MapPoint{
 
-
 private:
     Barrier activeBarrier;
     int carMaxCount = 1;
@@ -92,7 +91,6 @@ public:
 
     string _str(){
         auto s = "<MapPoint X:" + to_string(XCoord) + ", Y:" + to_string(YCoord) + "> - STORE: " + store.name;
-
         return s;
     };
 

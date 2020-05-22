@@ -13,7 +13,6 @@ int main() {
     RoadObject end_road = map.insert(12, 15);
     Car<RoadObject> t = start_road.startCar(end_road);
     Car<RoadObject> t3 = start_road.startCar(end_road);
-    Car<RoadObject> t4 = start_road.startCar(end_road);
 
 
      map.nextTick(1);
