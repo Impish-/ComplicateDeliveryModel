@@ -89,7 +89,7 @@ public:
 
     Car<RoadObject> startCar(RoadObject endPoint){
         Car<RoadObject> newCar = Car<RoadObject>(endPoint, endPoint);
-        newCar.name = 'created_' + cars.size();
+        newCar.name = to_string('generated') + to_string(cars.size());
         incomingCar(newCar, true);
         return newCar;
     };

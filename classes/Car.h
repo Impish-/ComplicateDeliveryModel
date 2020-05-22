@@ -17,9 +17,15 @@ class Car {
         };
         string name;
         void nextTick(int tickCount){
-            cout << "\t\t" << " car.tick handler" <<endl;
+            cout   << "\t\t" <<  _str() <<": car.tick handler" <<endl;
     //        carsIter.
         };
+
+    string _str(){
+        auto s = "<Car " + name + ">";
+        return s;
+    };
+
     private:
         T currentPoint;
         T finishPoint;
