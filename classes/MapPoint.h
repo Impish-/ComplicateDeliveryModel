@@ -89,8 +89,6 @@ public:
     using MapPoint::XCoord;
     using MapPoint::YCoord;
 
-
-
     RoadObject() {XCoord=-1;YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};
 
