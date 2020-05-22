@@ -90,6 +90,7 @@ public:
     using MapPoint::YCoord;
 
 
+
     RoadObject() {XCoord=-1;YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};
 
@@ -152,6 +153,7 @@ public:
         }
 
         for ( auto car : cars ){
+            if(car.tickUpdated == tickCount){continue;};
             car.nextTick(tickCount, items, *this);
         }
     };
