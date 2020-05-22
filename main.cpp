@@ -6,15 +6,13 @@
 using namespace std;
 
 int main() {
-    Map<MapPoint> map = Map<MapPoint>(100,100);
+    Map<RoadObject> map = Map<RoadObject>(100,100);
 
     //test insert
-    MapPoint start_road = map.insert(10, 15);
+    RoadObject start_road = map.insert(10, 15);
     map.insert(11, 15);
-    MapPoint end_road = map.insert(12, 15);
-
-
-    Car testcar = start_road.startCar(end_road)
+    RoadObject end_road = map.insert(12, 15);
+    start_road.startCar(end_road);
 
 
     map.nextTick(1);

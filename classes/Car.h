@@ -7,10 +7,11 @@
 
 using namespace std;
 
-
+template <class T>
 class Car {
     public:
-        Car(){
+        Car(){};
+        Car(T start, T end){
 
         };
     private:
