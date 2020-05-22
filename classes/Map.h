@@ -85,9 +85,9 @@ class Map {
            return getPathList(from, to, a);
        }
 
-        void addStore(int x, int y, string name, int *products){
+        void addStore(int x, int y, string name){
             Type targetPoint = getElement(x, y);
-
+            targetPoint.addStore(name);
          };
 
 

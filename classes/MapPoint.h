@@ -7,11 +7,11 @@
 
 #include <string>
 #include <list>
-#include "Store.h"
+
 #include "Car.h"
 #include <iostream>
 #include <map>
-
+#include "Store.h"
 
 using namespace std;
 
@@ -63,16 +63,17 @@ public:
 };
 
 class MapPoint{
-public:
-    int XCoord;
-    int YCoord;
-    Store store;
+    public:
+        int XCoord;
+        int YCoord;
+        Store store;
 
-    void addStore(){
+        void addStore(string name){
+            store = Store(name);
 
-    };
-    void saveTo(){};
-    void load(){};
+        };
+        void saveTo(){};
+        void load(){};
 
 };
 
@@ -88,6 +89,7 @@ public:
     using MapPoint::store;
     using MapPoint::XCoord;
     using MapPoint::YCoord;
+    using MapPoint::addStore;
 
     RoadObject() {XCoord=-1;YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};

@@ -17,7 +17,7 @@ template <class T>
 class Car {
     private:
         list<T> path;
-        Store owner;
+//        Store owner;
     public:
         bool arrived = false;
 

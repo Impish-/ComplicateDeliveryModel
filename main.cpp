@@ -7,11 +7,11 @@ using namespace std;
 
 
 int main() {
-    ns::product p {60, "Ned Flanders", "744 Evergreen Terrace", };
-    json j = p;
-    std::cout << j << std::endl;
-
-    auto p2 = j.get<ns::product>();
+//    ns::product p {60, "Ned Flanders", "744 Evergreen Terrace", };
+//    json j = p;
+//    std::cout << j << std::endl;
+//
+//    auto p2 = j.get<ns::product>();
 //
 //    to_json(j, p2)
 //    std::cout << ns::.id << std::endl;
@@ -29,8 +29,10 @@ int main() {
     map.insert(12, 17);
     map.insert(12, 16);
 
-//    map.addStore(10, 15, "TestStore");
-//    map.addStore(20, 15, "TestStore2");
+//    int *a = new int[5] = {1,2,3,4,5};
+//    int *b = new int[5] = {6,7,8,9,10};
+    map.addStore(10, 15, "TestStore");
+    map.addStore(20, 15, "TestStore2");
 
 //    map.update(11, 17, second_start_road);
 //    map.update(10, 15, start_road);
