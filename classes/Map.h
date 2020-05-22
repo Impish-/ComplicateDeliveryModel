@@ -41,7 +41,7 @@ class Map {
             cout << "sdf" << endl;
         };
 
-        list<Type> checkBranch(Type roadBranc, Type to,list<RoadObject> pathList, Type fromRoad){
+        list<Type> checkBranch(Type roadBranc, Type to,list<Type> pathList, Type fromRoad){
             pathList.push_back(fromRoad);
             bool found = (std::find(pathList.begin(), pathList.end(), roadBranc) != pathList.end());
             if (found){return pathList ;}
@@ -56,20 +56,29 @@ class Map {
             }
 
 
-        list<Type> getPathList(Type from, Type to, list<RoadObject> pathList){
+        list<Type> getPathList(Type from, Type to, list<Type> pathList){
             list<Type> rightRoad = checkBranch(items[from.XCoord + 1][from.YCoord], to, pathList, from);
             if ((std::find(rightRoad.begin(), rightRoad.end(), to) != rightRoad.end())){
                 return rightRoad;
             }
             list<Type> toLeft = checkBranch(items[from.XCoord - 1][from.YCoord], to, pathList, from);
+            if ((std::find(toLeft.begin(), toLeft.end(), to) != toLeft.end())){
+                return toLeft;
+            }
             list<Type> toBottom = checkBranch(items[from.XCoord][from.YCoord + 1], to, pathList, from);
+            if ((std::find(toBottom.begin(), toBottom.end(), to) != toBottom.end())){
+                return toBottom;
+            }
             list<Type> toTop = checkBranch(items[from.XCoord][from.YCoord-1], to, pathList, from);
+            if ((std::find(toTop.begin(), toTop.end(), to) != toTop.end())){
+                return toTop;
+            }
             return pathList;
         };
 
-       void getPathList(Type from, Type to) {
+        list<Type> getPathList(Type from, Type to) {
            list<RoadObject> a;
-           list<RoadObject> b = getPathList(from, to, a);
+           return getPathList(from, to, a);
        }
 
 

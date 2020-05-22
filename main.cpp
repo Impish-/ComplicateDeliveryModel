@@ -14,11 +14,12 @@ int main() {
 
     // обход
     map.insert(11, 16);
-    map.insert(11, 17);
+    RoadObject second_start_road = map.insert(11, 17);
     map.insert(12, 17);
     map.insert(12, 16);
 
-    map.getPathList(start_road, end_road);
+    list<RoadObject> path1 = map.getPathList(start_road, end_road);
+    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
 
     Car<RoadObject> t = start_road.startCar(end_road);
     Car<RoadObject> t3 = start_road.startCar(end_road);
