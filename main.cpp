@@ -20,8 +20,8 @@ int main() {
     map.insert(12, 17);
     map.insert(12, 16);
 
-    map.addStore(10, 15, "TestStore");
-    map.addStore(20, 15, "TestStore2");
+//    map.addStore(10, 15, "TestStore");
+//    map.addStore(20, 15, "TestStore2");
 
 //    map.update(11, 17, second_start_road);
 //    map.update(10, 15, start_road);
