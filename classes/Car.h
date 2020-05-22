@@ -21,6 +21,7 @@ class Car {
         Store owner;
 
     public:
+        int tickUpdated = 0;
         void setCurrent(T& icurrent){
             current = icurrent;
         };
@@ -33,6 +34,7 @@ class Car {
         Car(list<T> carPath){
             path = carPath;
             current = path.front();
+            tickUpdated = 0;
         };
         string name;
 
@@ -43,6 +45,7 @@ class Car {
         };
 
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& currentRoad){
+
             bool next = false;
             for ( auto road : path ){
                 if (next){
@@ -56,6 +59,7 @@ class Car {
                     continue;
                 }
             }
+            tickUpdated = tickCount;
             items[current.XCoord][current.YCoord] = current;
         };
         string _str(){
