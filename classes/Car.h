@@ -36,7 +36,7 @@ class Car {
             path = carPath;
             current = path.front();
             wayTo = path.back();
-            tickUpdated = 0;
+            tickUpdated = -1;
         };
         string name;
 

@@ -23,6 +23,7 @@ class OrderPart{
 
 class Order {
 public:
+    Order():{};
     list<OrderPart> parts;
     Store getNearStore(int product_id){};
     void addPartToDelivery(){};
