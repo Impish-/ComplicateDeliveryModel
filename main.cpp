@@ -14,23 +14,24 @@ int main() {
     map.insert(11, 15);
     RoadObject end_road = map.insert(12, 15);
 
-    // обход
+
     map.insert(11, 16);
     RoadObject second_start_road = map.insert(11, 17);
     map.insert(12, 17);
     map.insert(12, 16);
 
+    map.addStore(10, 15, "TestStore");
+    map.addStore(20, 15, "TestStore2");
 
-
-    map.update(11, 17, second_start_road);
-    map.update(10, 15, start_road);
-    map.update(12, 15, end_road);
-
-    list<RoadObject> path1 = map.getPathList(start_road, end_road);
-    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
-
-    Car<RoadObject> t = start_road.startCar(path1);
-    Car<RoadObject> t3 = second_start_road.startCar(path2);
+//    map.update(11, 17, second_start_road);
+//    map.update(10, 15, start_road);
+//    map.update(12, 15, end_road);
+//
+//    list<RoadObject> path1 = map.getPathList(start_road, end_road);
+//    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
+//
+//    Car<RoadObject> t = start_road.startCar(path1);
+//    Car<RoadObject> t3 = second_start_road.startCar(path2);
 
     map.update(11, 17, second_start_road);
     map.update(10, 15, start_road);

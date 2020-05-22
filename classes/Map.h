@@ -37,6 +37,7 @@ class Map {
         Type getElement(int XCoord, int YCoord){
             return items[XCoord][YCoord];
         };
+
         void remove(int XCoord, int YCoord){
             items[XCoord].erase(YCoord);
         };
@@ -83,6 +84,11 @@ class Map {
            list<RoadObject> a;
            return getPathList(from, to, a);
        }
+
+        void addStore(int x, int y, string name, int *products){
+            Type targetPoint = getElement(x, y);
+
+         };
 
 
         void nextTick(int tickCount){
