@@ -47,7 +47,6 @@ class Car {
         };
 
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& currentRoad){
-
             bool next = false;
             for ( auto road : path ){
                 if (road == wayTo){
@@ -74,11 +73,6 @@ class Car {
             auto s = "<Car " + name + ">";
             return s;
         };
-
-
-
-
-
 };
 
 #endif //MDILIVERY_CAR_H
