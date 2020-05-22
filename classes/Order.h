@@ -24,9 +24,13 @@ class Order {
     // Поступает от юзера,
     // генерит куски доставки и раскидывает по сторам
 public:
-    Order() = default;
-    Order(int x, int y, int deliveryTime, int *productIds){
+    int deliveryTime;
+    int products;
 
+    Order() = default;
+    Order(int ideliveryTime, int *productIds){
+        deliveryTime = ideliveryTime;
+        products = *productIds;
     };
     list<OrderPart> parts;
 //    Store getNearStore(int product_id){};

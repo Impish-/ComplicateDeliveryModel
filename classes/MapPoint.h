@@ -67,9 +67,17 @@ class MapPoint{
         int XCoord;
         int YCoord;
         Store store;
+        Order activeOrder;
 
         void addStore(string name, int *productIds){
             store = Store(name, productIds);
+        };
+
+        void addOrder(int deliveryTick, int *productIds){
+            activeOrder = Order(deliveryTick, productIds);
+        };
+        void closeOrder(){
+//            activeOrder = NULL;
         };
 
         void saveTo(){};
@@ -89,8 +97,10 @@ public:
     using MapPoint::XCoord;
     using MapPoint::YCoord;
     using MapPoint::addStore;
+    using MapPoint::addOrder;
+    using MapPoint::closeOrder;
 
-    RoadObject() {XCoord=-1;YCoord=-1;};
+    RoadObject() {XCoord=-1; YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};
 
     bool operator== (const RoadObject other){

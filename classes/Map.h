@@ -91,7 +91,8 @@ class Map {
          };
 
         void processOrder(int x, int y, int deliveryTime, int *productIds){
-
+            Type obj = getElement(x, y);
+            obj.addOrder(deliveryTime, productIds);
         }
 
         void nextTick(int tickCount){
