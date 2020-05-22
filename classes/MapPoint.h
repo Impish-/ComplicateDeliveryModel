@@ -142,7 +142,7 @@ public:
     };
 
     string _str(){
-        auto s = "<MapPoint X:" + to_string(XCoord) + ", Y:" + to_string(YCoord) + "> - STORE: " + store.name;
+        auto s = "<MapPoint X:" + to_string(XCoord) + ", Y:" + to_string(YCoord) + ">";
         return s;
     };
 
@@ -157,7 +157,9 @@ public:
                 //// уничтожить
                 continue;
             };
-            if(car.tickUpdated >= tickCount){continue;};
+            if(car.tickUpdated >= tickCount){
+                continue;
+            };
             car.nextTick(tickCount, items, *this);
         }
     };
