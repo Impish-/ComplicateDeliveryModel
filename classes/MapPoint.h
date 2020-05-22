@@ -10,9 +10,34 @@
 #include "Store.h"
 #include "Car.h"
 #include <iostream>
+#include <map>
+
 
 using namespace std;
 
+static const char alphanum[] =
+        "0123456789"
+        "!@#$%^&*"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+int stringLength = sizeof(alphanum) - 1;
+
+char genRandom()
+{
+
+    return alphanum[rand() % stringLength];
+}
+
+string rnd(){
+    string Str;
+    for(unsigned int i = 0; i < 20; ++i)
+    {
+        Str += genRandom();
+
+    }
+    return Str;
+}
 
 class CException
 {
@@ -81,23 +106,36 @@ public:
     void serBarrier(){};
     void deleteBarrier(){};
 
-//    void setMapObject(ptr this){
-//
-//    };
+    void outOffCar(Car<RoadObject> incomeCar){
+        cout << "\t\t~ RoadObject" <<_str() << "     " << incomeCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
+        int i = 0;
+        for ( auto car : cars ){
+            if (incomeCar == car){
+                advance(carsIter, i);
+                cars.erase(carsIter);
+                cout << "~" << _str() << "DELETE CAR size("<< cars.size()<<")"<<endl;
+                break;
+            };
+            i++;
+        };
+    }
 
-    void incomingCar(Car<RoadObject> incomeCar, bool startFromHere=false){
+    Car<RoadObject> incomingCar(Car<RoadObject> incomeCar, bool startFromHere=false){
         if (cars.size() > carMaxCount){
             throw RoadPointIsFull();
         }
         cars.push_back(incomeCar);
-        cout << "~" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
+        incomeCar.setCurrent(*this);
+//        cars.push_back(incomeCar);
+
+        cout << "\t\t~ RoadObject" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
+        return incomeCar;
     }
 
-    Car<RoadObject> startCar(RoadObject endPoint){
-        Car<RoadObject> newCar = Car<RoadObject>(endPoint, endPoint);
-        newCar.name = to_string(cars.size());
-        incomingCar(newCar, true);
-        return newCar;
+    Car<RoadObject> startCar(list<RoadObject> carPath){
+        Car<RoadObject> newCar = Car<RoadObject>(carPath);
+        newCar.name = rnd();
+        return incomingCar(newCar, true);;
     };
 
     string _str(){
@@ -105,10 +143,14 @@ public:
         return s;
     };
 
-    void nextTick(int tickCount){
-        cout << "\t" << _str() << " .tick handler!  CARS HERE:" << cars.size()<<endl;
+    void nextTick(int tickCount, map<int, map<int, RoadObject >> items){
+        if(cars.size()>0){
+            cout << "\t" << _str() << "CARS HERE:" << cars.size()<<endl;
+            cout << "\n" <<endl;
+        }
+
         for ( auto car : cars ){
-            car.nextTick(tickCount);
+            car.nextTick(tickCount, items);
         }
     };
 };

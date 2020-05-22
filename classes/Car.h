@@ -5,35 +5,56 @@
 #ifndef MDILIVERY_CAR_H
 #define MDILIVERY_CAR_H
 
+
+#include <iterator>
+#include <list>
+#include <map>
+
+
 using namespace std;
 
 template <class T>
 class Car {
     private:
-        T currentPoint;
-        T finishPoint;
+
+        list<T> path;
         Store owner;
 
     public:
+        void setCurrent(T &icurrent){
+            current = icurrent;
+        };
+        T current;
+        bool operator == (const Car other){
+            return this->name == other.name;
+        };
+
         Car(){};
-        Car(T start, T end){
-            currentPoint = start;
-            finishPoint = end;
+        Car(list<T> carPath){
+            path = carPath;
+//            current = path.front();
         };
         string name;
 
-        void optimalWayTo(){
-            list<T> nears = currentPoint.nearRoads();
+        void goToNext(T roadPoint){
+            current.outOffCar(*this);
+            roadPoint.incomingCar(*this);
+        }
 
-        };
+        void nextTick(int tickCount, map<int, map<int, T >> items){
+            bool next = false;
+            for ( auto road : path ){
+                if (next){
+                    cout << "------->>>\t\t" << "My next point" << current._str() << endl;
+                    goToNext(road);
+                    break;
+                }
+                if (road == current){
+                    cout << ">>-------\t\t" << "My current point" << road._str() << endl;
+                    next = true;
+                }
+            }
 
-        bool canContinueDriving(){
-
-        };
-
-        void nextTick(int tickCount){
-            cout   << "\t\t" <<  _str() <<": car.tick handler" <<endl;
-            currentPoint.nearRoads();
         };
         string _str(){
             auto s = "<Car " + name + ">";

@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <map>
+#include <list>
+#include "MapPoint.h"
+
 
 using namespace std;
 
@@ -87,7 +90,7 @@ class Map {
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
-                    Y.second.nextTick(tickCount); // Делегируем обработку события всем элементам
+                    Y.second.nextTick(tickCount, items); // Делегируем обработку события всем элементам
                 };
             }
         };

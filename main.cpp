@@ -1,7 +1,8 @@
 #include <iostream>
 #include "classes/MapPoint.h"
 #include "classes/Map.h"
-
+#include <list>
+#include <map>
 using namespace std;
 
 int main() {
@@ -18,18 +19,27 @@ int main() {
     map.insert(12, 17);
     map.insert(12, 16);
 
-    list<RoadObject> path1 = map.getPathList(start_road, end_road);
-    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
 
-    Car<RoadObject> t = start_road.startCar(end_road);
-    Car<RoadObject> t3 = start_road.startCar(end_road);
+
+    map.update(11, 17, second_start_road);
     map.update(10, 15, start_road);
     map.update(12, 15, end_road);
 
+    list<RoadObject> path1 = map.getPathList(start_road, end_road);
+    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
 
-     map.nextTick(1);
-    map.remove(10, 15);
+    Car<RoadObject> t = start_road.startCar(path1);
+    Car<RoadObject> t3 = second_start_road.startCar(path2);
 
-//
+    map.update(11, 17, second_start_road);
+    map.update(10, 15, start_road);
+    map.update(12, 15, end_road);
+
+    int tick = 0;
+
+    map.nextTick(tick ++);
+    map.nextTick(tick ++);
+//    map.nextTick(tick ++);
+//    map.nextTick(tick ++);
     return 0;
 }
