@@ -16,16 +16,17 @@ using namespace std;
 template <class T>
 class Car {
     private:
-
         list<T> path;
         Store owner;
-
     public:
-        int tickUpdated = 0;
+        bool arrived = false;
+
+        int tickUpdated = -1;
         void setCurrent(T& icurrent){
             current = icurrent;
         };
         T current;
+        T wayTo;
         bool operator == (const Car other){
             return this->name == other.name;
         };
@@ -34,6 +35,7 @@ class Car {
         Car(list<T> carPath){
             path = carPath;
             current = path.front();
+            wayTo = path.back();
             tickUpdated = 0;
         };
         string name;
@@ -48,16 +50,24 @@ class Car {
 
             bool next = false;
             for ( auto road : path ){
+                if (road == wayTo){
+                    cout << ">>-------\t\t" << "ARRIVED  " << _str() << " "<< road._str() << endl;
+                    arrived = true;
+                    break;
+                }
+
                 if (next){
-                    cout << "------->>>\t\t" << "My next point" <<items[road.XCoord] [road.YCoord]._str() << endl;
+                    cout << "------->>>\t\t" << "My next point" <<items[road.XCoord] [road.YCoord]._str()<< _str() << endl;
                     goToNext(currentRoad, items[road.XCoord] [road.YCoord]);
                     break;
                 }
                 if (road == currentRoad){
-                    cout << ">>-------\t\t" << "My current point" << road._str() << endl;
+                    cout << ">>-------\t\t" << "My current point" << road._str() << _str() << endl;
                     next = true;
                     continue;
                 }
+
+
             }
             tickUpdated = tickCount;
             items[current.XCoord][current.YCoord] = current;

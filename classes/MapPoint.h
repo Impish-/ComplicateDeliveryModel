@@ -108,7 +108,7 @@ public:
     void deleteBarrier(){};
 
     RoadObject outOffCar(Car<RoadObject> outCar){
-        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
+//        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
         list<Car<RoadObject>> newCars;
 
         for ( auto car : cars ){
@@ -130,7 +130,7 @@ public:
         incomeCar.setCurrent(*this);
 //        cars.push_back(incomeCar);
 
-        cout << "\t\t~ RoadObject" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
+//        cout << "\t\t~ RoadObject" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
         return *this;
     }
 
@@ -153,7 +153,11 @@ public:
         }
 
         for ( auto car : cars ){
-            if(car.tickUpdated == tickCount){continue;};
+            if(car.arrived){
+                //// уничтожить
+                continue;
+            };
+            if(car.tickUpdated >= tickCount){continue;};
             car.nextTick(tickCount, items, *this);
         }
     };
