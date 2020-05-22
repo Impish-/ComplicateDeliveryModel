@@ -14,23 +14,23 @@ class Store{
         list<OrderPart> schedule;
 
         Store() = default;
-        Store(string iName){
+        Store(string iName, int *productIds){
             name = iName;
         };
 
         void orderToSchedule(){};
         void doDelivery(){};
         void runOrderPart(){};
+        void checkProducts(){};
 
         void nextTick(int tickCount){
+                for ( auto part : schedule ){
+                    if (part.startDeliveryTick == tickCount){
+                        cout << "TIME TO DELIVERY IT" << endl;
+                    }
+                };
 
-            for ( auto part : schedule ){
-                if (part.startDeliveryTick == tickCount){
-                    cout << "TIME TO DELIVERY IT" << endl;
-                }
             };
-
-        };
 };
 
 #endif //MDILIVERY_STORE_H

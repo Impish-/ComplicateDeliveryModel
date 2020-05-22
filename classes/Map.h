@@ -85,18 +85,21 @@ class Map {
            return getPathList(from, to, a);
        }
 
-        void addStore(int x, int y, string name){
+        void addStore(int x, int y, string name, int *productIds){
             Type targetPoint = getElement(x, y);
-            targetPoint.addStore(name);
+            targetPoint.addStore(name, productIds);
          };
 
+        void processOrder(int x, int y, int deliveryTime, int *productIds){
+
+        }
 
         void nextTick(int tickCount){
             cout << "MAP NextTick "<< tickCount << endl;
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
-                    Y.second.nextTick(tickCount, items); // Делегируем обработку события всем элементам
+                    Y.second.nextTick(tickCount, items);
                 };
             }
         };

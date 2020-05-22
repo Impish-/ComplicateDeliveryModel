@@ -68,13 +68,12 @@ class MapPoint{
         int YCoord;
         Store store;
 
-        void addStore(string name){
-            store = Store(name);
-
+        void addStore(string name, int *productIds){
+            store = Store(name, productIds);
         };
+
         void saveTo(){};
         void load(){};
-
 };
 
 
@@ -162,6 +161,7 @@ public:
             };
             car.nextTick(tickCount, items, *this);
         }
+        store.nextTick(tickCount);
     };
 };
 

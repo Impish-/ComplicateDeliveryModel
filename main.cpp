@@ -2,6 +2,8 @@
 #include "classes/Map.h"
 #include "models/product.h"
 #include <iostream>
+#include <unistd.h>
+
 
 using namespace std;
 
@@ -29,10 +31,14 @@ int main() {
     map.insert(12, 17);
     map.insert(12, 16);
 
-//    int *a = new int[5] = {1,2,3,4,5};
-//    int *b = new int[5] = {6,7,8,9,10};
-    map.addStore(10, 15, "TestStore");
-    map.addStore(20, 15, "TestStore2");
+    int a [5] = {1,2,3,4,5};
+    int b [5] = {6,7,8,9,10};
+    map.addStore(10, 15, "TestStore", a);
+    map.addStore(20, 15, "TestStore2", b);
+
+    int orderProducts[] = {1,  3,  5,  8};
+    map.processOrder(11,15, 50, orderProducts);
+
 
 //    map.update(11, 17, second_start_road);
 //    map.update(10, 15, start_road);
@@ -49,17 +55,17 @@ int main() {
     map.update(12, 15, end_road);
 
     int tick = 0;
-//
-//    cout << "TICK :" << tick <<endl;
-//    map.nextTick(tick ++);
-//    sleep(5);
-//    cout << "TICK :" << tick <<endl;
-//    map.nextTick(tick ++);
-//    sleep(5);
-//    cout << "TICK :" << tick <<endl;
-//    map.nextTick(tick ++);
-//    sleep(5);
-//    cout << "TICK :" << tick <<endl;
-//    map.nextTick(tick ++);
+
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
     return 0;
 }
