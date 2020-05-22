@@ -21,9 +21,9 @@ class Car {
         Store owner;
 
     public:
-        void setCurrent(T &icurrent){
-            current = icurrent;
-        };
+//        void setCurrent(T icurrent){
+//            current = icurrent;
+//        };
         T current;
         bool operator == (const Car other){
             return this->name == other.name;
@@ -32,24 +32,25 @@ class Car {
         Car(){};
         Car(list<T> carPath){
             path = carPath;
-//            current = path.front();
+            current = path.front();
         };
         string name;
 
-        void goToNext(T roadPoint){
-            current.outOffCar(*this);
+        void goToNext(T iCurrent, T roadPoint){
+            iCurrent.outOffCar(*this);
             roadPoint.incomingCar(*this);
         }
 
-        void nextTick(int tickCount, map<int, map<int, T >> items){
+        void nextTick(int tickCount, map<int, map<int, T >> items, T currentRoad){
+            this->current = currentRoad;
             bool next = false;
             for ( auto road : path ){
                 if (next){
-                    cout << "------->>>\t\t" << "My next point" << current._str() << endl;
-                    goToNext(road);
+                    cout << "------->>>\t\t" << "My next point" << currentRoad._str() << endl;
+                    goToNext(currentRoad, items[road.XCoord] [road.YCoord]);
                     break;
                 }
-                if (road == current){
+                if (road == currentRoad){
                     cout << ">>-------\t\t" << "My current point" << road._str() << endl;
                     next = true;
                 }

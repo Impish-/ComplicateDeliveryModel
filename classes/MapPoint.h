@@ -106,11 +106,11 @@ public:
     void serBarrier(){};
     void deleteBarrier(){};
 
-    void outOffCar(Car<RoadObject> incomeCar){
-        cout << "\t\t~ RoadObject" <<_str() << "     " << incomeCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
+    void outOffCar(Car<RoadObject> outCar){
+        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
         int i = 0;
         for ( auto car : cars ){
-            if (incomeCar == car){
+            if (outCar == car){
                 advance(carsIter, i);
                 cars.erase(carsIter);
                 cout << "~" << _str() << "DELETE CAR size("<< cars.size()<<")"<<endl;
@@ -125,7 +125,7 @@ public:
             throw RoadPointIsFull();
         }
         cars.push_back(incomeCar);
-        incomeCar.setCurrent(*this);
+//        incomeCar.setCurrent(*this);
 //        cars.push_back(incomeCar);
 
         cout << "\t\t~ RoadObject" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
@@ -144,13 +144,14 @@ public:
     };
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >> items){
+
         if(cars.size()>0){
             cout << "\t" << _str() << "CARS HERE:" << cars.size()<<endl;
             cout << "\n" <<endl;
         }
 
         for ( auto car : cars ){
-            car.nextTick(tickCount, items);
+            car.nextTick(tickCount, items, *this);
         }
     };
 };
