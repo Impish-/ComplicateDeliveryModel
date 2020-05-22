@@ -3,6 +3,7 @@
 #include "classes/Map.h"
 #include <list>
 #include <map>
+#include <unistd.h>
 using namespace std;
 
 int main() {
@@ -37,9 +38,16 @@ int main() {
 
     int tick = 0;
 
+    cout << "TICK :" << tick <<endl;
     map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
     map.nextTick(tick ++);
-//    map.nextTick(tick ++);
-//    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
     return 0;
 }

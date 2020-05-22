@@ -42,17 +42,18 @@ class Car {
         }
 
         void nextTick(int tickCount, map<int, map<int, T >> items, T currentRoad){
-            this->current = currentRoad;
+            current = currentRoad;
             bool next = false;
             for ( auto road : path ){
                 if (next){
-                    cout << "------->>>\t\t" << "My next point" << currentRoad._str() << endl;
+                    cout << "------->>>\t\t" << "My next point" <<items[road.XCoord] [road.YCoord]._str() << endl;
                     goToNext(currentRoad, items[road.XCoord] [road.YCoord]);
                     break;
                 }
                 if (road == currentRoad){
                     cout << ">>-------\t\t" << "My current point" << road._str() << endl;
                     next = true;
+                    continue;
                 }
             }
 

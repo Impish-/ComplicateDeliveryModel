@@ -108,15 +108,14 @@ public:
 
     void outOffCar(Car<RoadObject> outCar){
         cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
-        int i = 0;
+        list<Car<RoadObject>> newCars;
+
         for ( auto car : cars ){
             if (outCar == car){
-                advance(carsIter, i);
-                cars.erase(carsIter);
-                cout << "~" << _str() << "DELETE CAR size("<< cars.size()<<")"<<endl;
-                break;
+                continue;
             };
-            i++;
+            newCars.push_back(car);
+            cars = newCars;
         };
     }
 
