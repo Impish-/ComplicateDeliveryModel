@@ -121,7 +121,7 @@ public:
         return *this;
     }
 
-    Car<RoadObject> incomingCar(Car<RoadObject> incomeCar, bool startFromHere=false){
+    RoadObject incomingCar(Car<RoadObject>& incomeCar, bool startFromHere=false){
         if (cars.size() > carMaxCount){
             throw RoadPointIsFull();
         }
@@ -130,13 +130,14 @@ public:
 //        cars.push_back(incomeCar);
 
         cout << "\t\t~ RoadObject" << _str() << "INSERTED CAR size("<< cars.size()<<")"<<endl;
-        return incomeCar;
+        return *this;
     }
 
     Car<RoadObject> startCar(list<RoadObject> carPath){
         Car<RoadObject> newCar = Car<RoadObject>(carPath);
         newCar.name = rnd();
-        return incomingCar(newCar, true);;
+        incomingCar(newCar, true);
+        return newCar;
     };
 
     string _str(){
