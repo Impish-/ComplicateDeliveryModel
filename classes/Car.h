@@ -66,8 +66,6 @@ class Car {
                     next = true;
                     continue;
                 }
-
-
             }
             tickUpdated = tickCount;
             items[current.XCoord][current.YCoord] = current;
