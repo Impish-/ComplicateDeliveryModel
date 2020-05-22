@@ -12,7 +12,7 @@ class Map {
         int N;
         int M;
         map<int, map<int, Type >> items;
-//        map<int, map<int, Type >>::iterator roadMapIter;
+//        map<int, map<int, Type >>::iterator = items.begin();
         allocator<Type> typeAllocator;
     public:
         Map(int m, int n){
@@ -20,16 +20,22 @@ class Map {
             N=n;
         };
         Type insert(int x, int y){
-            Type item = Type(x, y);
-            items[item.XCoord][item.YCoord] = item;
-//            cout << "insert (Map Object): " << item.XCoord << ", " << item.YCoord << endl;
-            return item;
+//            Map self = *this;
+            items[x][y] = Type(x, y);
+//            items[x][y].setMapObject(Map<RoadObject>, this);
+            return getElement(x,y);
         };
+
+        Type update(int x, int y, Type newItem){
+            items[x][y] = newItem;
+            return getElement(x,y);
+        };
+
         Type getElement(int XCoord, int YCoord){
             return items[XCoord][YCoord];
         };
         void remove(int XCoord, int YCoord){
-            typeAllocator.destroy(&items[XCoord][YCoord]);
+            items[XCoord].erase(YCoord);
         };
         void tickH(pair<const int, pair<int, map<int, Type >> >& pair){
             cout << "sdf" << endl;

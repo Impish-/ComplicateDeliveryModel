@@ -13,11 +13,12 @@ int main() {
     RoadObject end_road = map.insert(12, 15);
     Car<RoadObject> t = start_road.startCar(end_road);
     Car<RoadObject> t3 = start_road.startCar(end_road);
+    map.update(10, 15, start_road);
+    map.update(12, 15, end_road);
 
 
      map.nextTick(1);
-//    map.remove(10, 15);
-//    cout << "ELEM: " << map.getElement(10, 15)._str() << endl;
+    map.remove(10, 15);
 
 //
     return 0;

@@ -75,6 +75,10 @@ public:
     void serBarrier(){};
     void deleteBarrier(){};
 
+//    void setMapObject(ptr this){
+//
+//    };
+
     void incomingCar(Car<RoadObject> incomeCar, bool startFromHere=false){
         if (cars.size() > carMaxCount){
             throw RoadPointIsFull();
@@ -85,7 +89,8 @@ public:
 
     Car<RoadObject> startCar(RoadObject endPoint){
         Car<RoadObject> newCar = Car<RoadObject>(endPoint, endPoint);
-        incomingCar(newCar);
+        newCar.name = 'created_' + cars.size();
+        incomingCar(newCar, true);
         return newCar;
     };
 
@@ -95,8 +100,10 @@ public:
     };
 
     void nextTick(int tickCount){
-        cout << "\t" << _str() << " .tick handler" <<endl;
-//        carsIter.
+        cout << "\t" << _str() << " .tick handler!  CARS HERE:" << cars.size()<<endl;
+        for ( auto car : cars ){
+            car.nextTick(tickCount);
+        }
     };
 };
 
