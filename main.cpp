@@ -26,8 +26,10 @@ int main() {
     RoadObject end_road = map.insert(12, 15);
 
     map.insert(11, 16);
+    map.insert(11, 17);
     RoadObject second_start_road = map.insert(11, 17);
     map.insert(12, 17);
+    map.insert(13, 17);
     map.insert(12, 16);
 
     list<int> a  = {1,2,3,4,5};
@@ -37,7 +39,7 @@ int main() {
     map.addStore(20, 15, "TestStore2", b);
 
     list<int> orderProducts = {1,  3,  5,  8};
-    map.processOrder(11,15, 0, orderProducts);
+    map.processOrder(13,17, 0, orderProducts);
 
 
 //    map.update(11, 17, second_start_road);
@@ -59,7 +61,7 @@ int main() {
     for (int i=0 ; i<50; i ++){
         cout << "TICK :" << tick <<endl;
         map.nextTick(tick ++);
-        sleep(5);
+        sleep(1);
     }
 
 

@@ -147,19 +147,12 @@ public:
             if (car.tickUpdated == tickCount){
                 continue;
             }
-            if (car.current == car.wayTo){
-                cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
-                todelete.push_back(car);
-                continue;
-            };
 
             if(car.tickUpdated >= tickCount){
                 continue;
             };
             car.nextTick(tickCount, items, *this);
-        }
-
-
+        };
         leftCars(todelete);
 //        items[XCoord][YCoord] = *this;
     };

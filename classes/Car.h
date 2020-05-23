@@ -38,6 +38,14 @@ class Car {
             this->wayTo = path.back();
             this->tickUpdated = -1;
         };
+
+
+//        void Kill()
+//        {
+//            destroy this;
+//        };
+
+
         string name;
 
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& placedRoad){
@@ -45,11 +53,11 @@ class Car {
             T oldRoad = items[current.XCoord][current.YCoord];
 
             if (current == wayTo){
-                cout << "\t\t"<< _str() <<" Go to home" <<endl;
-                current.outOffCar(*this);
-                items[current.XCoord][current.YCoord] = current;
+                cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
+                items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
                 return;
             };
+
             bool next = false;
             for ( auto road : path ){
                 if (next){
