@@ -12,9 +12,10 @@ using namespace std;
 
 class OrderPart{
 private:
-    //    MapPoint toPoint;
+//        MapPoint toPoint;
     bool delivered = false;
 public:
+//    list<RoadObject> path;
 //    list<RoadObject> path;
     list<int> products;
     pair<int, int> deliveryTo;
