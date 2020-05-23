@@ -85,14 +85,28 @@ class Map {
            return getPathList(from, to, a);
        }
 
-        void addStore(int x, int y, string name, int *productIds){
+        void addStore(int x, int y, string name, list<int>productIds){
             Type targetPoint = getElement(x, y);
             targetPoint.addStore(name, productIds);
+            items[x][y] = targetPoint;
          };
 
-        void processOrder(int x, int y, int deliveryTime, int *productIds){
+        void processOrder(int x, int y, int deliveryTime, list<int>productIds){
             Type obj = getElement(x, y);
-            obj.addOrder(deliveryTime, productIds);
+            list<pair <Store, list<int>>> deals;
+            for ( auto X : items )
+            {
+                for ( auto Y : X.second ){
+                    list<int> haveProducts = Y.second.store.checkProduct(productIds);
+                    if (haveProducts.size() > 0){
+                        pair<Store, list<int>> storePair (Y.second.store, haveProducts);
+                        deals.push_back(storePair);
+                    }
+                };
+            }
+
+            obj.addOrder(deliveryTime, deals);
+            items[x][y] = obj;
         }
 
         void nextTick(int tickCount){

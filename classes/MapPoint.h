@@ -12,6 +12,7 @@
 #include <iostream>
 #include <map>
 #include "Store.h"
+#include "Order.h"
 
 using namespace std;
 
@@ -69,12 +70,12 @@ class MapPoint{
         Store store;
         Order activeOrder;
 
-        void addStore(string name, int *productIds){
-            store = Store(name, productIds);
+        void addStore(string name, list<int> iproductIds){
+            store = Store(name, iproductIds);
         };
 
-        void addOrder(int deliveryTick, int *productIds){
-            activeOrder = Order(deliveryTick, productIds);
+        void addOrder(int deliveryTick, list<pair <Store, list<int>>> deals){
+            activeOrder = Order(deliveryTick, deals);
         };
         void closeOrder(){
 //            activeOrder = NULL;

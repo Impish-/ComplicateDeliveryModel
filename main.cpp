@@ -18,7 +18,6 @@ int main() {
 //    to_json(j, p2)
 //    std::cout << ns::.id << std::endl;
 
-
     Map<RoadObject> map = Map<RoadObject>(100,100);
 
     //test insert
@@ -31,12 +30,13 @@ int main() {
     map.insert(12, 17);
     map.insert(12, 16);
 
-    int a [5] = {1,2,3,4,5};
-    int b [5] = {6,7,8,9,10};
+    list<int> a  = {1,2,3,4,5};
+    list<int> b = {6,7,8,9,10};
+
     map.addStore(10, 15, "TestStore", a);
     map.addStore(20, 15, "TestStore2", b);
 
-    int orderProducts[] = {1,  3,  5,  8};
+    list<int> orderProducts = {1,  3,  5,  8};
     map.processOrder(11,15, 50, orderProducts);
 
 

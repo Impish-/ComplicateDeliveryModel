@@ -10,34 +10,25 @@
 #include <list>
 
 
-class OrderPart{
-    private:
-    //    MapPoint toPoint;
-        bool delivered = false;
-    public:
-        int startDeliveryTick = -1;
-        void to_car(){};
-        void setDeliveredStatus(bool newStatus){delivered=newStatus;};
-};
-
 class Order {
-    // Поступает от юзера,
-    // генерит куски доставки и раскидывает по сторам
-public:
-    int deliveryTime;
-    int products;
+    public:
+        int deliveryTime;
+        list<pair <Store, list<int>>> deals;
+        bool finish = false;
 
-    Order() = default;
-    Order(int ideliveryTime, int *productIds){
-        deliveryTime = ideliveryTime;
-        products = *productIds;
+        Order() = default;
+        Order(int ideliveryTime, list<pair <Store, list<int>>> ideals){
+            deliveryTime = ideliveryTime;
+            deals = ideals;
+            for ( pair <Store, list<int>> deal : deals){
+                deal.first.orderToSchedule(ideliveryTime, deal.second);
+            }
+        };
+    //    Store getNearStore(int product_id){};
+
+        void genParts(){};
+        void status(){}; //Процент исполеннных частей.
+        void setStoresList(){};
     };
-    list<OrderPart> parts;
-//    Store getNearStore(int product_id){};
-    void addPartToDelivery(){};
-    void genParts(){};
-    void status(){}; //Процент исполеннных частей.
-    void setStoresList(){};
-};
 
 #endif //MDILIVERY_ORDER_H

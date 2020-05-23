@@ -3,7 +3,9 @@
 
 #include <string>
 #include <list>
-#include "Order.h"
+#include <set>
+#include <iostream>
+#include "OrderPart.h"
 
 using namespace std;
 
@@ -11,21 +13,35 @@ class Store{
     public:
         string name;
         int carsCount = 0;
-        list<OrderPart> schedule;
+        list<pair<int, OrderPart>> schedule;
+        list<int> productIds;
 
         Store() = default;
-        Store(string iName, int *productIds){
+        Store(string iName,list<int> iproductIds){
             name = iName;
+            productIds = iproductIds;
         };
 
-        void orderToSchedule(){};
+        void orderToSchedule(int ideliveryTime, list<int> productsToOrder){
+            schedule.push_back(pair<int, OrderPart> (ideliveryTime, OrderPart(productsToOrder)));
+        };
         void doDelivery(){};
         void runOrderPart(){};
-        void checkProducts(){};
+
+        list<int> checkProduct(list<int>orderProductIds){
+            list<int> result;
+            list<int>::iterator it;
+            for (auto product : orderProductIds){
+                it = std::find(productIds.begin(), productIds.end(), product);
+                if(it != productIds.end())
+                    result.push_back(product);
+            }
+            return result;
+        };
 
         void nextTick(int tickCount){
                 for ( auto part : schedule ){
-                    if (part.startDeliveryTick == tickCount){
+                    if (part.first == tickCount){
                         cout << "TIME TO DELIVERY IT" << endl;
                     }
                 };
