@@ -25,17 +25,12 @@ class Order {
             for (pair <Store, pair<list<int>, list<T>>> deal : deals){
                 Store store = deal.first;
                 list<T> path = deal.second.second;
-                pair<int, int> from;
 
-                bool getfirst = true;
                 for (auto x: path){
-                    if(getfirst){
-                        from = pair<int, int> (x.XCoord, x.YCoord); getfirst = false;
-                    };
                     pathCoords.push_back(pair<int, int> (x.XCoord, x.YCoord));
                 }
 
-                OrderPart orderPart = OrderPart(deal.second.first, pathCoords, from, orderToCoords);
+                OrderPart orderPart = OrderPart(deal.second.first, pathCoords, store.coords, orderToCoords);
                 store.orderToSchedule(ideliveryTime, orderPart);
                 items[store.coords.first][store.coords.second].store = store;
             }

@@ -68,7 +68,6 @@ class MapPoint{
         int YCoord;
         Store store;
 
-
         void addStore(string name, list<int> iproductIds){
             store = Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
         };

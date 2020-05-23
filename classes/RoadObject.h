@@ -29,7 +29,10 @@ public:
     };
 
     Order<RoadObject> activeOrder;
-    void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals, map<int, map<int, RoadObject >>& items){
+    void addOrder(  int deliveryTick,
+                    list<pair <Store, pair<list<int>,
+                    list<RoadObject>>>> deals,
+                    map<int, map<int, RoadObject >>& items){
         activeOrder = Order<RoadObject>(deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
 
@@ -85,12 +88,13 @@ public:
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
         if(cars.size()>0){
-            cout << "\t POINT:" << _str() << ", CARS HERE:" << cars.size()<<endl;
+            cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
         }
 
         for ( auto car : cars ){
-            if(car.arrived){
+            if(car.current == car.wayTo){
                 //// уничтожить
+                cout << "\t POINT:" << _str() << ", CARS HERE:" << cars.size()<<endl;
                 continue;
             };
             if(car.tickUpdated >= tickCount){

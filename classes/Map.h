@@ -90,6 +90,14 @@ class Map {
             items[x][y] = targetPoint;
          };
 
+        list <pair<int, int>> convertRoadObjectToCoords(list<RoadObject> way){
+            list <pair<int, int>> pathCoords;
+            for (auto x: way){
+                pathCoords.push_back(pair<int, int> (x.XCoord, x.YCoord));
+            }
+            return pathCoords;
+        }
+
         void processOrder(int x, int y, int deliveryTime, list<int>productIds){
             Type obj = getElement(x, y);
             list<pair <Store, pair<list<int>, list<RoadObject>>>> deals;
@@ -98,7 +106,7 @@ class Map {
                 for ( auto Y : X.second ){
                     list<int> haveProducts = Y.second.store.checkProduct(productIds);
                     if (haveProducts.size() > 0){
-                        list<RoadObject> pathToOrder = getPathList(Y.second, obj);
+                        list <RoadObject> pathToOrder = getPathList(Y.second, obj);
                         pair<Store, pair<list<int>, list<RoadObject>>>
                                 storePair (Y.second.store, pair<list<int>,
                                         list<RoadObject>>( haveProducts, pathToOrder));
@@ -123,8 +131,7 @@ class Map {
                         };
                         pair<int, int> fromChords = order.path.front();
                         RoadObject from = items[fromChords.first][fromChords.second];
-                        items[order.deliveryFrom.first][order.deliveryFrom.second] = from.startCar(convertedPath);
-
+                        items[fromChords.first][fromChords.second] = from.startCar(convertedPath);
                     };
                     Y.second.nextTick(tickCount, items);
                 };

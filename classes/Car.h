@@ -46,27 +46,26 @@ class Car {
             return cur;
         };
 
-        void nextTick(int tickCount, map<int, map<int, T >>& items, T& currentRoad){
+        void nextTick(int tickCount, map<int, map<int, T >>& items, T& placedRoad){
+            this->current = placedRoad;
+            if (current == wayTo){
+                cout << "\t\t"<< _str() <<"Waiting in target point" <<endl;
+                return;
+            };
             bool next = false;
             for ( auto road : path ){
-//                if (road == wayTo){
-//                    cout << "\t\t>>" << "order delivered!  " << _str() << " "<< road._str() << endl;
-//                    arrived = true;
-//                    break;
-//                }
-
                 if (next){
-                    cout << "\t\t------->>>" << "CAR MOVIE: next point" <<items[road.XCoord] [road.YCoord]._str()<< _str() << endl;
-                    goToNext(currentRoad, items[road.XCoord] [road.YCoord]);
+                    goToNext(placedRoad, items[road.XCoord] [road.YCoord]);
                     break;
                 }
-                if (road == currentRoad){
-                    cout << ">>-------\t\t" << "CAR MOVIE: current point" << road._str() << _str() << endl;
+                if (road == placedRoad){
                     next = true;
                     continue;
                 }
             }
+            cout << "\t\t>>------- " << _str() << " CAR MOVIE: from  " << placedRoad._str() << " to ---->>  " << current._str() << "\n" << endl;
             tickUpdated = tickCount;
+
             items[current.XCoord][current.YCoord] = current;
         };
         string _str(){
