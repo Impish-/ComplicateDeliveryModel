@@ -6,7 +6,7 @@
 #include <set>
 #include <iostream>
 #include "OrderPart.h"
-#include "MapPoint.h"
+
 
 using namespace std;
 
@@ -33,7 +33,7 @@ class Store{
         void doDelivery(){};
         void runOrderPart(){};
 
-        list<int> checkProduct(list<int>orderProductIds){
+        list<int> checkProduct(list<int> orderProductIds){
             list<int> result;
             list<int>::iterator it;
             for (auto product : orderProductIds){
@@ -47,6 +47,7 @@ class Store{
         void nextTick(int tickCount){
                 for ( auto part : schedule ){
                     if (part.first == tickCount){
+//                        OrderPart onRoad = part.second
                         cout << "TIME TO DELIVERY IT" << endl;
                     }
                 };

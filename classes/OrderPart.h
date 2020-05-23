@@ -5,24 +5,24 @@
 #ifndef MDILIVERY_ORDERPART_H
 #define MDILIVERY_ORDERPART_H
 #include <list>
-#include "MapPoint.h"
+//#include "RoadObject.h"
+
 
 using namespace std;
-
 
 class OrderPart{
 private:
     //    MapPoint toPoint;
     bool delivered = false;
 public:
-    list<RoadObject> path;
+//    list<RoadObject> path;
     list<int> products;
     pair<int, int> deliveryTo;
 
     OrderPart() = default;
-    OrderPart(list<int> iproducts, list<RoadObject> ipath){
+    OrderPart(list<int> iproducts){
         products = iproducts;
-        path = ipath;
+//        path = ipath;
     };
 
     void setDeliveredStatus(bool newStatus){delivered=newStatus;};

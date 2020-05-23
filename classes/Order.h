@@ -7,6 +7,7 @@
 
 #include "Car.h"
 #include "MapPoint.h"
+#include "Store.h"
 #include <list>
 
 template <class T>
@@ -22,7 +23,7 @@ class Order {
             deals = ideals;
             for (pair <Store, pair<list<int>, list<T>>> deal : deals){
                 list<T> path = deal.second.second;
-                OrderPart orderPart = OrderPart(deal.second.first, path);
+                OrderPart orderPart = OrderPart(deal.second.first);
                 Store store = deal.first.orderToSchedule(ideliveryTime, orderPart);
                 items[store.coords.first][store.coords.second].store = store;
             }
