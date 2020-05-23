@@ -48,7 +48,6 @@ class Car {
             return s;
         };
 
-
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& placedRoad){
             this->current = placedRoad;
             T oldRoad = items[current.XCoord][current.YCoord];
