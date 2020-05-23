@@ -71,7 +71,7 @@ class MapPoint{
 
 
         void addStore(string name, list<int> iproductIds){
-            store = Store(name, iproductIds);
+            store = Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
         };
 
 
@@ -102,8 +102,8 @@ public:
     };
 
     Order<RoadObject> activeOrder;
-    void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals){
-        this -> activeOrder = Order<RoadObject>(deliveryTick, deals);
+    void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals, map<int, map<int, RoadObject >>& items){
+        this -> activeOrder = Order<RoadObject>(deliveryTick, deals, items);
     };
 
     void closeOrder(){

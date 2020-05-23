@@ -16,15 +16,19 @@ class Store{
         int carsCount = 0;
         list<pair<int, OrderPart>> schedule;
         list<int> productIds;
+        pair<int, int> coords;
 
         Store() = default;
-        Store(string iName,list<int> iproductIds){
+        Store(string iName,list<int> iproductIds, pair<int, int> icoords){
             name = iName;
             productIds = iproductIds;
+            coords = icoords;
         };
 
-        void orderToSchedule(int ideliveryTime, list<int> productsToOrder){
+        Store orderToSchedule(int ideliveryTime, list<int> productsToOrder){
             schedule.push_back(pair<int, OrderPart> (ideliveryTime, OrderPart(productsToOrder)));
+
+            return *this;
         };
         void doDelivery(){};
         void runOrderPart(){};

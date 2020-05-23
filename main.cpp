@@ -37,7 +37,7 @@ int main() {
     map.addStore(20, 15, "TestStore2", b);
 
     list<int> orderProducts = {1,  3,  5,  8};
-    map.processOrder(11,15, 50, orderProducts);
+    map.processOrder(11,15, 5, orderProducts);
 
 
 //    map.update(11, 17, second_start_road);
@@ -56,6 +56,24 @@ int main() {
 
     int tick = 0;
 
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
+    cout << "TICK :" << tick <<endl;
+    map.nextTick(tick ++);
+    sleep(5);
     cout << "TICK :" << tick <<endl;
     map.nextTick(tick ++);
     sleep(5);

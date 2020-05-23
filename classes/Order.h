@@ -17,12 +17,13 @@ class Order {
         bool finish = false;
 
         Order() = default;
-        Order(int ideliveryTime, list<pair <Store, pair<list<int>, list<T>>>> ideals){
+        Order(int ideliveryTime, list<pair <Store, pair<list<int>, list<T>>>> ideals,  map<int, map<int, T >>& items){
             deliveryTime = ideliveryTime;
             deals = ideals;
             for ( pair <Store, pair<list<int>, list<T>>> deal : deals){
                 list<T> path = deal.second.second;
-                deal.first.orderToSchedule(ideliveryTime, deal.second.first);
+                Store store = deal.first.orderToSchedule(ideliveryTime, deal.second.first);
+                items[store.coords.first][store.coords.second].store = store;
             }
         };
     //    Store getNearStore(int product_id){};

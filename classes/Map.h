@@ -108,7 +108,7 @@ class Map {
                 };
             }
 
-            obj.addOrder(deliveryTime, deals);
+            obj.addOrder(deliveryTime, deals, items);
             items[x][y] = obj;
         }
 
