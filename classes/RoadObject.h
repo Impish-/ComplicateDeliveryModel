@@ -125,24 +125,14 @@ public:
         return s;
     };
 
-    void leftCars(list<Car<RoadObject>> & listDelete){
-        list<Car<RoadObject>> newCars;
-        for ( auto car : cars ){
-//            delete car;
-            if ((std::find(listDelete.begin(), listDelete.end(), car) == listDelete.end())){
-                continue;
-            };
-            newCars.push_back(car);
-        };
-        cars = newCars;
-    }
+
 
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
         if ((cars.size() < 1)) return;
         if (haveActions(tickCount)) return;
         cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
-        list<Car<RoadObject>> todelete;
+
         for ( auto car : cars ){
             if (car.tickUpdated == tickCount){
                 continue;
@@ -153,7 +143,6 @@ public:
             };
             car.nextTick(tickCount, items, *this);
         };
-        leftCars(todelete);
 //        items[XCoord][YCoord] = *this;
     };
 };
