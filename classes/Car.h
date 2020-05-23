@@ -32,11 +32,11 @@ class Car {
         };
 
         Car(){};
-        Car(list<T> carPath){
-            path = carPath;
-            current = path.front();
-            wayTo = path.back();
-            tickUpdated = -1;
+        Car(list<T> & carPath){
+            this->path = carPath;
+            this->current = path.front();
+            this->wayTo = path.back();
+            this->tickUpdated = -1;
         };
         string name;
 
@@ -49,19 +49,19 @@ class Car {
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& currentRoad){
             bool next = false;
             for ( auto road : path ){
-                if (road == wayTo){
-                    cout << ">>-------\t\t" << "ARRIVED  " << _str() << " "<< road._str() << endl;
-                    arrived = true;
-                    break;
-                }
+//                if (road == wayTo){
+//                    cout << "\t\t>>" << "order delivered!  " << _str() << " "<< road._str() << endl;
+//                    arrived = true;
+//                    break;
+//                }
 
                 if (next){
-                    cout << "------->>>\t\t" << "My next point" <<items[road.XCoord] [road.YCoord]._str()<< _str() << endl;
+                    cout << "\t\t------->>>" << "CAR MOVIE: next point" <<items[road.XCoord] [road.YCoord]._str()<< _str() << endl;
                     goToNext(currentRoad, items[road.XCoord] [road.YCoord]);
                     break;
                 }
                 if (road == currentRoad){
-                    cout << ">>-------\t\t" << "My current point" << road._str() << _str() << endl;
+                    cout << ">>-------\t\t" << "CAR MOVIE: current point" << road._str() << _str() << endl;
                     next = true;
                     continue;
                 }

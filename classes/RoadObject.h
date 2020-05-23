@@ -30,7 +30,7 @@ public:
 
     Order<RoadObject> activeOrder;
     void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals, map<int, map<int, RoadObject >>& items){
-        this -> activeOrder = Order<RoadObject>(deliveryTick, pair<int,int> (this->XCoord, this->YCoord), deals, items);
+        activeOrder = Order<RoadObject>(deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
 
     void closeOrder(){
@@ -72,11 +72,10 @@ public:
         return *this;
     }
 
-    Car<RoadObject> startCar(list<RoadObject> carPath){
+    RoadObject startCar(list<RoadObject> carPath){
         Car<RoadObject> newCar = Car<RoadObject>(carPath);
         newCar.name = rnd();
-        incomingCar(newCar, true);
-        return newCar;
+        return incomingCar(newCar, true);
     };
 
     string _str(){
@@ -86,8 +85,7 @@ public:
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
         if(cars.size()>0){
-            cout << "\t" << _str() << "CARS HERE:" << cars.size()<<endl;
-            cout << "\n" <<endl;
+            cout << "\t POINT:" << _str() << ", CARS HERE:" << cars.size()<<endl;
         }
 
         for ( auto car : cars ){

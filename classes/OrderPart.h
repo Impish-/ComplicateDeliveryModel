@@ -25,7 +25,7 @@ public:
             pair<int, int> ideliveryTo){
         products = iproducts;
         path = ipath;
-        deliveryFrom = ideliveryFrom;
+        deliveryFrom = pair<int, int> (ideliveryFrom.first, ideliveryFrom.second);
         deliveryTo = ideliveryTo;
     };
 

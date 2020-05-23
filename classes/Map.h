@@ -52,7 +52,6 @@ class Map {
             if (roadBranc.XCoord == -1 & roadBranc.YCoord == -1){return pathList ;}
 
             if (roadBranc == to){
-                cout << "WAY BUILDED";
                 pathList.push_back(roadBranc);
                 return pathList;
             }
@@ -116,16 +115,18 @@ class Map {
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
-                    Y.second.nextTick(tickCount, items);
                     list<OrderPart> orders = Y.second.store.nextTick(tickCount);
-                    for (auto order : orders){
-                        RoadObject from = items[order.deliveryFrom.first][order.deliveryFrom.second];
+                    for (OrderPart order : orders){
                         list<RoadObject> convertedPath;
                         for (auto pathPair: order.path){
                             convertedPath.push_back(items[pathPair.first][pathPair.second]);
                         };
-                        from.startCar(convertedPath);
+                        pair<int, int> fromChords = order.path.front();
+                        RoadObject from = items[fromChords.first][fromChords.second];
+                        items[order.deliveryFrom.first][order.deliveryFrom.second] = from.startCar(convertedPath);
+
                     };
+                    Y.second.nextTick(tickCount, items);
                 };
             }
         };

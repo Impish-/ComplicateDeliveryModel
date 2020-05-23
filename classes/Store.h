@@ -48,6 +48,7 @@ class Store{
         list<OrderPart> ordersToDelivery;
         for ( auto part : schedule ){
             if (part.first == tickCount){
+                part.second.deliveryFrom = coords;
                 ordersToDelivery.push_back(part.second);
                 cout << "TIME TO DELIVERY IT" << endl;
             }
