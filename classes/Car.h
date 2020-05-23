@@ -64,7 +64,7 @@ class Car {
             }
             cout << "\t\t>>------- " << _str() << " CAR MOVIE: from  " << placedRoad._str() << " to ---->>  " << current._str() << "\n" << endl;
             tickUpdated = tickCount;
-
+            current.updateCar(*this);
             items[current.XCoord][current.YCoord] = current;
         };
         string _str(){
