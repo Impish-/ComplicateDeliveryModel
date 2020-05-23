@@ -9,6 +9,7 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include "Store.h"
 
 
 using namespace std;
@@ -17,14 +18,13 @@ template <class T>
 class Car {
     private:
         list<T> path;
-//        Store owner;
+        Store owner;
+        OrderPart orderPart;
     public:
+        string name;
         bool arrived = false;
-
         int tickUpdated = -1;
-        void setCurrent(T& icurrent){
-            current = icurrent;
-        };
+
         T current;
         T wayTo;
         bool operator == (const Car other){
@@ -39,14 +39,15 @@ class Car {
             this->tickUpdated = -1;
         };
 
+        void setCurrent(T& icurrent){
+            current = icurrent;
+        };
 
-//        void Kill()
-//        {
-//            destroy this;
-//        };
+        string _str(){
+            auto s = "<Car " + name + ">";
+            return s;
+        };
 
-
-        string name;
 
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& placedRoad){
             this->current = placedRoad;
@@ -75,10 +76,6 @@ class Car {
             current.updateCar(*this);
             items[current.XCoord][current.YCoord] = current;
         };
-        string _str(){
-            auto s = "<Car " + name + ">";
-            return s;
-        };
-};
+    };
 
 #endif //MDILIVERY_CAR_H
