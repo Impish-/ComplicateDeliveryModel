@@ -25,11 +25,11 @@ class Store{
             coords = icoords;
         };
 
-        Store orderToSchedule(int ideliveryTime, list<int> productsToOrder){
-            schedule.push_back(pair<int, OrderPart> (ideliveryTime, OrderPart(productsToOrder)));
-
+        Store orderToSchedule(int ideliveryTime, OrderPart orderPart){
+            schedule.push_back(pair<int, OrderPart> (ideliveryTime, orderPart));
             return *this;
         };
+
         void doDelivery(){};
         void runOrderPart(){};
 

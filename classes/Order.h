@@ -20,9 +20,10 @@ class Order {
         Order(int ideliveryTime, list<pair <Store, pair<list<int>, list<T>>>> ideals,  map<int, map<int, T >>& items){
             deliveryTime = ideliveryTime;
             deals = ideals;
-            for ( pair <Store, pair<list<int>, list<T>>> deal : deals){
+            for (pair <Store, pair<list<int>, list<T>>> deal : deals){
                 list<T> path = deal.second.second;
-                Store store = deal.first.orderToSchedule(ideliveryTime, deal.second.first);
+                OrderPart orderPart = OrderPart(deal.second.first, path);
+                Store store = deal.first.orderToSchedule(ideliveryTime, orderPart);
                 items[store.coords.first][store.coords.second].store = store;
             }
         };
