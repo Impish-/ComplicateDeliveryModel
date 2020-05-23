@@ -40,22 +40,21 @@ class Car {
         };
         string name;
 
-        T goToNext(T iCurrent, T roadPoint){
-            iCurrent.outOffCar(*this);
-            T cur = roadPoint.incomingCar(*this);
-            return cur;
-        };
-
         void nextTick(int tickCount, map<int, map<int, T >>& items, T& placedRoad){
             this->current = placedRoad;
+            T oldRoad = items[current.XCoord][current.YCoord];
+
             if (current == wayTo){
-                cout << "\t\t"<< _str() <<"Waiting in target point" <<endl;
+                cout << "\t\t"<< _str() <<" Go to home" <<endl;
+                current.outOffCar(*this);
+                items[current.XCoord][current.YCoord] = current;
                 return;
             };
             bool next = false;
             for ( auto road : path ){
                 if (next){
-                    goToNext(placedRoad, items[road.XCoord] [road.YCoord]);
+                    current = items[road.XCoord] [road.YCoord].incomingCar(*this);
+                    items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
                     break;
                 }
                 if (road == placedRoad){

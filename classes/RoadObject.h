@@ -57,6 +57,27 @@ public:
         return false;
     }
 
+    Car<RoadObject>* getCar(Car<RoadObject> checkingCar){
+        for ( auto car : cars ){
+            if (checkingCar == car){
+                return &car;
+            };
+        };
+    }
+
+    void updateCar(Car<RoadObject> checkingCar){
+        list<Car<RoadObject>> newCars;
+        for ( auto car : cars ){
+            if (checkingCar == car){
+                newCars.push_back(checkingCar);
+
+            }else{newCars.push_back(car);}
+
+            cars = newCars;
+            return;
+        };
+    }
+
     RoadObject outOffCar(Car<RoadObject> outCar){
 //        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
         list<Car<RoadObject>> newCars;
@@ -102,6 +123,7 @@ public:
         for ( auto car : cars ){
             if(car.current == car.wayTo){
                 //// уничтожить
+
                 cout << "\t POINT:" << _str() << ", CARS HERE:" << cars.size()<<endl;
                 continue;
             };
