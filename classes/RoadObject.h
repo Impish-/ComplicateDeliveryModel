@@ -48,6 +48,15 @@ public:
     void serBarrier(){};
     void deleteBarrier(){};
 
+    bool carExist(Car<RoadObject> checkingCar){
+        for ( auto car : cars ){
+            if (checkingCar == car){
+                return true;
+            };
+        };
+        return false;
+    }
+
     RoadObject outOffCar(Car<RoadObject> outCar){
 //        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
         list<Car<RoadObject>> newCars;
@@ -57,7 +66,6 @@ public:
                 continue;
             };
             newCars.push_back(car);
-
         };
         cars = newCars;
         return *this;
@@ -67,7 +75,7 @@ public:
         if (cars.size() > carMaxCount){
             throw RoadPointIsFull();
         }
-        cars.push_back(incomeCar);
+        if(!carExist(incomeCar)) cars.push_back(incomeCar); // if not exist
         incomeCar.setCurrent(*this);
 //        cars.push_back(incomeCar);
 
