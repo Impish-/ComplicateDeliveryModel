@@ -30,7 +30,7 @@ public:
 
     Order<RoadObject> activeOrder;
     void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals, map<int, map<int, RoadObject >>& items){
-        this -> activeOrder = Order<RoadObject>(deliveryTick, deals, items);
+        this -> activeOrder = Order<RoadObject>(deliveryTick, pair<int,int> (this->XCoord, this->YCoord), deals, items);
     };
 
     void closeOrder(){
@@ -100,7 +100,7 @@ public:
             };
             car.nextTick(tickCount, items, *this);
         }
-        store.nextTick(tickCount);
+
     };
 };
 

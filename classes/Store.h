@@ -44,15 +44,16 @@ class Store{
             return result;
         };
 
-        void nextTick(int tickCount){
-                for ( auto part : schedule ){
-                    if (part.first == tickCount){
-//                        OrderPart onRoad = part.second
-                        cout << "TIME TO DELIVERY IT" << endl;
-                    }
-                };
-
-            };
+    list<OrderPart> nextTick(int tickCount){
+        list<OrderPart> ordersToDelivery;
+        for ( auto part : schedule ){
+            if (part.first == tickCount){
+                ordersToDelivery.push_back(part.second);
+                cout << "TIME TO DELIVERY IT" << endl;
+            }
+        };
+        return ordersToDelivery;
+    };
 };
 
 #endif //MDILIVERY_STORE_H

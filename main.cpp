@@ -56,34 +56,12 @@ int main() {
 
     int tick = 0;
 
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
-    sleep(5);
-    cout << "TICK :" << tick <<endl;
-    map.nextTick(tick ++);
+    for (int i=0 ; i<50; i ++){
+        cout << "TICK :" << tick <<endl;
+        map.nextTick(tick ++);
+        sleep(5);
+    }
+
+
     return 0;
 }

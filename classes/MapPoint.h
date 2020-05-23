@@ -8,10 +8,8 @@
 #include <string>
 #include <list>
 
-#include "Car.h"
 #include <iostream>
 #include <map>
-#include "Store.h"
 #include "Order.h"
 
 using namespace std;
@@ -63,6 +61,7 @@ public:
     void setChangeTimeout(int timeout){};
 };
 
+
 class MapPoint{
     public:
         int XCoord;
@@ -73,7 +72,6 @@ class MapPoint{
         void addStore(string name, list<int> iproductIds){
             store = Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
         };
-
 
         void saveTo(){};
         void load(){};

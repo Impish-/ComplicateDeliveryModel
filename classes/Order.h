@@ -18,17 +18,18 @@ class Order {
         bool finish = false;
 
         Order() = default;
-        Order(int ideliveryTime, list<pair <Store, pair<list<int>, list<T>>>> ideals,  map<int, map<int, T >>& items){
+        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair <Store, pair<list<int>, list<T>>>> ideals,  map<int, map<int, T >>& items){
             deliveryTime = ideliveryTime;
             deals = ideals;
+            list <pair<int, int>> pathCoords;
             for (pair <Store, pair<list<int>, list<T>>> deal : deals){
                 list<T> path = deal.second.second;
                 for (auto x: path){
-
+                    pathCoords.push_back(pair<int, int> (x.XCoord, x.YCoord));
                 }
-
-                OrderPart orderPart = OrderPart(deal.second.first);
-                Store store = deal.first.orderToSchedule(ideliveryTime, orderPart);
+                Store store = deal.first;
+                OrderPart orderPart = OrderPart(deal.second.first, pathCoords, store.coords, orderToCoords );
+                store.orderToSchedule(ideliveryTime, orderPart);
                 items[store.coords.first][store.coords.second].store = store;
             }
         };

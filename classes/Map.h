@@ -113,11 +113,19 @@ class Map {
         }
 
         void nextTick(int tickCount){
-            cout << "MAP NextTick "<< tickCount << endl;
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
                     Y.second.nextTick(tickCount, items);
+                    list<OrderPart> orders = Y.second.store.nextTick(tickCount);
+                    for (auto order : orders){
+                        RoadObject from = items[order.deliveryFrom.first][order.deliveryFrom.second];
+                        list<RoadObject> convertedPath;
+                        for (auto pathPair: order.path){
+                            convertedPath.push_back(items[pathPair.first][pathPair.second]);
+                        };
+                        from.startCar(convertedPath);
+                    };
                 };
             }
         };
