@@ -6,6 +6,7 @@
 #include <set>
 #include <iostream>
 #include "OrderPart.h"
+#include "MapPoint.h"
 
 using namespace std;
 

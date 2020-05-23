@@ -9,19 +9,20 @@
 #include "MapPoint.h"
 #include <list>
 
-
+template <class T>
 class Order {
     public:
         int deliveryTime;
-        list<pair <Store, list<int>>> deals;
+        list<pair <Store, pair<list<int>, list<T>>>> deals;
         bool finish = false;
 
         Order() = default;
-        Order(int ideliveryTime, list<pair <Store, list<int>>> ideals){
+        Order(int ideliveryTime, list<pair <Store, pair<list<int>, list<T>>>> ideals){
             deliveryTime = ideliveryTime;
             deals = ideals;
-            for ( pair <Store, list<int>> deal : deals){
-                deal.first.orderToSchedule(ideliveryTime, deal.second);
+            for ( pair <Store, pair<list<int>, list<T>>> deal : deals){
+                list<T> path = deal.second.second;
+                deal.first.orderToSchedule(ideliveryTime, deal.second.first);
             }
         };
     //    Store getNearStore(int product_id){};

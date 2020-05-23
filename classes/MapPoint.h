@@ -68,18 +68,12 @@ class MapPoint{
         int XCoord;
         int YCoord;
         Store store;
-        Order activeOrder;
+
 
         void addStore(string name, list<int> iproductIds){
             store = Store(name, iproductIds);
         };
 
-        void addOrder(int deliveryTick, list<pair <Store, list<int>>> deals){
-            activeOrder = Order(deliveryTick, deals);
-        };
-        void closeOrder(){
-//            activeOrder = NULL;
-        };
 
         void saveTo(){};
         void load(){};
@@ -98,16 +92,23 @@ public:
     using MapPoint::XCoord;
     using MapPoint::YCoord;
     using MapPoint::addStore;
-    using MapPoint::addOrder;
-    using MapPoint::closeOrder;
 
     RoadObject() {XCoord=-1; YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y;};
 
-    bool operator== (const RoadObject other){
+
+    bool operator == (const RoadObject other){
         return this->XCoord == other.XCoord && this->YCoord == other.YCoord;
     };
 
+    Order<RoadObject> activeOrder;
+    void addOrder(int deliveryTick, list<pair <Store, pair<list<int>, list<RoadObject>>>> deals){
+        this -> activeOrder = Order<RoadObject>(deliveryTick, deals);
+    };
+
+    void closeOrder(){
+//            activeOrder = NULL;
+    };
 
     void nearRoads(){
 

@@ -93,13 +93,16 @@ class Map {
 
         void processOrder(int x, int y, int deliveryTime, list<int>productIds){
             Type obj = getElement(x, y);
-            list<pair <Store, list<int>>> deals;
+            list<pair <Store, pair<list<int>, list<RoadObject>>>> deals;
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
                     list<int> haveProducts = Y.second.store.checkProduct(productIds);
                     if (haveProducts.size() > 0){
-                        pair<Store, list<int>> storePair (Y.second.store, haveProducts);
+                        list<RoadObject> pathToOrder = getPathList(Y.second, obj);
+                        pair<Store, pair<list<int>, list<RoadObject>>>
+                                storePair (Y.second.store, pair<list<int>,
+                                        list<RoadObject>>( haveProducts, pathToOrder));
                         deals.push_back(storePair);
                     }
                 };
