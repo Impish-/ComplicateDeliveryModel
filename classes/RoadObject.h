@@ -57,13 +57,13 @@ public:
         return false;
     }
 
-    Car<RoadObject>* getCar(Car<RoadObject> checkingCar){
-        for ( auto car : cars ){
-            if (checkingCar == car){
-                return &car;
+    Car<RoadObject> getCar(Car<RoadObject> checkingCar){
+        for ( auto car : cars ) {
+            if (checkingCar == car) {
+                return car;
             };
         };
-    }
+    };
 
     void updateCar(Car<RoadObject> checkingCar){
         list<Car<RoadObject>> newCars;
@@ -78,10 +78,8 @@ public:
         };
     }
 
-    RoadObject outOffCar(Car<RoadObject> outCar){
-//        cout << "\t\t~ RoadObject" <<_str() << "     " << outCar._str() << "TRY DELETE CAR size("<< cars.size()<<")"<<endl;
+    void leftCar(Car<RoadObject> outCar){
         list<Car<RoadObject>> newCars;
-
         for ( auto car : cars ){
             if (outCar == car){
                 continue;
@@ -89,6 +87,10 @@ public:
             newCars.push_back(car);
         };
         cars = newCars;
+    }
+
+    RoadObject outOffCar(Car<RoadObject> outCar){
+        leftCar(outCar);
         return *this;
     }
 
@@ -110,29 +112,56 @@ public:
         return incomingCar(newCar, true);
     };
 
-    string _str(){
+    bool haveActions(int tickCount){
+        bool result = true;
+        for ( auto car : cars ){
+            result = result * (car.tickUpdated == tickCount);
+        };
+        return result;
+    }
+
+    string _str() {
         auto s = "<MapPoint X:" + to_string(XCoord) + ", Y:" + to_string(YCoord) + ">";
         return s;
     };
 
-    void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
-        if(cars.size()>0){
-            cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
-        }
-
+    void leftCars(list<Car<RoadObject>> & listDelete){
+        list<Car<RoadObject>> newCars;
         for ( auto car : cars ){
-            if(car.current == car.wayTo){
-                //// уничтожить
-
-                cout << "\t POINT:" << _str() << ", CARS HERE:" << cars.size()<<endl;
+//            delete car;
+            if ((std::find(listDelete.begin(), listDelete.end(), car) == listDelete.end())){
                 continue;
             };
+            newCars.push_back(car);
+        };
+        cars = newCars;
+    }
+
+
+    void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
+        if ((cars.size() < 1)) return;
+        if (haveActions(tickCount)) return;
+        cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
+        list<Car<RoadObject>> todelete;
+        for ( auto car : cars ){
+            if (car.tickUpdated == tickCount){
+                continue;
+            }
+            if (car.current == car.wayTo){
+                cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
+                todelete.push_back(car);
+                continue;
+            };
+
             if(car.tickUpdated >= tickCount){
                 continue;
             };
             car.nextTick(tickCount, items, *this);
         }
 
+
+        leftCars(todelete);
+//        items[XCoord][YCoord] = *this;
     };
 };
 
