@@ -1,0 +1,1 @@
+docker build --build-arg boost_libs=static -t backend .
