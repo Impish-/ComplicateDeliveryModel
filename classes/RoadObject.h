@@ -23,21 +23,23 @@ public:
     using MapPoint::XCoord;
     using MapPoint::YCoord;
     using MapPoint::addStore;
+    using MapPoint::MapPoint;
+    using MapPoint::setCoords;
 
     RoadObject() {XCoord=-1; YCoord=-1;};
-    RoadObject(int x, int y){XCoord = x;YCoord = y;};
+    RoadObject(int x, int y){XCoord = x;YCoord = y; activeOrder = NULL;};
 
 
     bool operator == (const RoadObject other){
         return this->XCoord == other.XCoord && this->YCoord == other.YCoord;
     };
 
-    Order<RoadObject> activeOrder;
+    Order<RoadObject> * activeOrder;
     void addOrder(  int deliveryTick,
-                    list<pair <Store, pair<list<int>,
-                    list<RoadObject>>>> deals,
+                    list<pair<list<int>,
+                    list<RoadObject>>> deals,
                     map<int, map<int, RoadObject >>& items){
-        activeOrder = Order<RoadObject>(deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
+        activeOrder = new Order<RoadObject>(deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
 
     void closeOrder(){
@@ -151,8 +153,10 @@ public:
         point["x"] = this->XCoord;
         point["y"] = this->YCoord;
         point["cars"] = json::array();
-        point["store"] = this->store.serialize();
-        point["order"] = this->activeOrder.serialize();
+
+        if (this->activeOrder != NULL) (point["order"] = this->activeOrder->serialize());
+
+        if (this->store != NULL){point["store"] = this->store->serialize();}
 
         for (auto car: this->cars){
             point["cars"].push_back(car.name);

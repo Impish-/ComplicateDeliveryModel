@@ -66,11 +66,15 @@ class MapPoint{
     public:
         int XCoord;
         int YCoord;
-        Store store;
+        Store* store = NULL;
 
         void addStore(string name, list<int> iproductIds){
-            store = Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
+             store = new Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
         };
+        void setCoords(int x, int y){
+            XCoord = x;
+            YCoord = y;
+        }
 
         void saveTo(){};
         void load(){};

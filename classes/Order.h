@@ -18,29 +18,30 @@ template <class T>
 class Order {
     public:
         int deliveryTime;
-        list<pair <Store, pair<list<int>, list<T>>>> deals;
         bool finish = false;
         string customer;
 
         Order() = default;
-        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair <Store, pair<list<int>,
-                list<T>>>> ideals,  map<int, map<int, T >>& items){
+        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair<list<int>,
+                list<T>>> ideals,  map<int, map<int, T >>& items){
             this->customer = "Неведомый";
             this->deliveryTime = ideliveryTime;
-            this->deals = ideals;
-            list <pair<int, int>> pathCoords;
-            for (pair <Store, pair<list<int>, list<T>>> deal : deals){
-                Store store = deal.first;
-                list<T> path = deal.second.second;
 
-                for (auto x: path){
+            for (pair<list<int>, list<T>> deal : ideals){
+                if (deal.second.size() == 0) { continue;}
+                list <pair<int, int>> pathCoords;
+                Store * store = NULL;
+                for (auto x: deal.second){
+                    if (store == NULL){
+                        store = items[x.XCoord][x.YCoord].store;
+                    }
                     pathCoords.push_back(pair<int, int> (x.XCoord, x.YCoord));
                 }
-
-                OrderPart orderPart = OrderPart(deal.second.first, pathCoords, store.coords, orderToCoords);
-                store.orderToSchedule(ideliveryTime, orderPart);
-                items[store.coords.first][store.coords.second].store = store;
+                OrderPart orderPart = OrderPart(deal.first, pathCoords, store->coords, orderToCoords);
+                store->orderToSchedule(ideliveryTime, orderPart);
+//                items[store->coords.first][store->coords.second].store =
             }
+
         };
     //    Store getNearStore(int product_id){};
 
@@ -50,6 +51,8 @@ class Order {
 
     json serialize(){
         json order;
+//        if (this == NULL) {return order;}
+
         order["customer"] = this->customer;
         order["deliveryTime"] = this->deliveryTime;
         order["status"] = this->finish;

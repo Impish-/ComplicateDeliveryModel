@@ -10,44 +10,58 @@
 using namespace std;
 using nlohmann::json;
 
+class NoRoadException : public CException
+{
+public:
+    void virtual PrintMessage()
+    {
+        cout << "Try to add point without road"; // **
+    }
+};
 
-template <class Type>
+
+template <class RoadObjectType>
 class Map {
     private:
         int N;
         int M;
-        map<int, map<int, Type >> items;
-//        map<int, map<int, Type >>::iterator = items.begin();
-        allocator<Type> typeAllocator;
+        map<int, map<int, RoadObjectType >> items;
+//        map<int, map<int, RoadObjectType >>::iterator = items.begin();
+        allocator<RoadObjectType> typeAllocator;
     public:
         Map(int m, int n){
             M=m;
             N=n;
         };
-        Type insert(int x, int y){
+        RoadObjectType insert(int x, int y){
 //            Map self = *this;
-            items[x][y] = Type(x, y);
+            items[x][y] = RoadObjectType(x, y);
 //            items[x][y].setMapObject(Map<RoadObject>, this);
             return getElement(x,y);
         };
 
-        Type update(int x, int y, Type newItem){
+        RoadObjectType update(int x, int y, RoadObjectType newItem){
             items[x][y] = newItem;
             return getElement(x,y);
         };
 
-        Type getElement(int XCoord, int YCoord){
+        bool elementExist(int XCoord, int YCoord){
+            RoadObjectType * z = &items[XCoord][YCoord];
+            return (z->XCoord > -1 & z->YCoord > -1);
+        };
+
+        RoadObjectType getElement(int XCoord, int YCoord){
             return items[XCoord][YCoord];
         };
 
         void remove(int XCoord, int YCoord){
             items[XCoord].erase(YCoord);
         };
-        void tickH(pair<const int, pair<int, map<int, Type >> >& pair){
+        void tickH(pair<const int, pair<int, map<int, RoadObjectType >> >& pair){
             cout << "sdf" << endl;
         };
 
-        list<Type> checkBranch(Type roadBranc, Type to,list<Type> pathList, Type fromRoad){
+        list<RoadObjectType> checkBranch(RoadObjectType roadBranc, RoadObjectType to, list<RoadObjectType> pathList, RoadObjectType fromRoad){
             pathList.push_back(fromRoad);
             bool found = (std::find(pathList.begin(), pathList.end(), roadBranc) != pathList.end());
             if (found){return pathList ;}
@@ -61,33 +75,49 @@ class Map {
             }
 
 
-        list<Type> getPathList(Type from, Type to, list<Type> pathList){
-            list<Type> rightRoad = checkBranch(items[from.XCoord + 1][from.YCoord], to, pathList, from);
+        list<RoadObjectType> getPathList(RoadObjectType from, RoadObjectType to, list<RoadObjectType> pathList){
+            list<RoadObjectType> rightRoad = checkBranch(items[from.XCoord + 1][from.YCoord], to, pathList, from);
             if ((std::find(rightRoad.begin(), rightRoad.end(), to) != rightRoad.end())){
                 return rightRoad;
             }
-            list<Type> toLeft = checkBranch(items[from.XCoord - 1][from.YCoord], to, pathList, from);
+            list<RoadObjectType> toLeft = checkBranch(items[from.XCoord - 1][from.YCoord], to, pathList, from);
             if ((std::find(toLeft.begin(), toLeft.end(), to) != toLeft.end())){
                 return toLeft;
             }
-            list<Type> toBottom = checkBranch(items[from.XCoord][from.YCoord + 1], to, pathList, from);
+            list<RoadObjectType> toBottom = checkBranch(items[from.XCoord][from.YCoord + 1], to, pathList, from);
             if ((std::find(toBottom.begin(), toBottom.end(), to) != toBottom.end())){
                 return toBottom;
             }
-            list<Type> toTop = checkBranch(items[from.XCoord][from.YCoord-1], to, pathList, from);
+            list<RoadObjectType> toTop = checkBranch(items[from.XCoord][from.YCoord - 1], to, pathList, from);
             if ((std::find(toTop.begin(), toTop.end(), to) != toTop.end())){
                 return toTop;
             }
             return pathList;
         };
 
-        list<Type> getPathList(Type from, Type to) {
+        list<RoadObjectType> getPathList(RoadObjectType from, RoadObjectType to) {
            list<RoadObject> a;
            return getPathList(from, to, a);
        }
 
+       void checkNeighboardPoints(RoadObjectType curPoint){
+            bool left = elementExist(curPoint.XCoord -1, curPoint.YCoord);
+            bool right = elementExist(curPoint.XCoord -1, curPoint.YCoord);
+            bool top = elementExist(curPoint.XCoord, curPoint.YCoord -1);
+            bool bottom = elementExist(curPoint.XCoord, curPoint.YCoord +1);
+            bool result = left * right * top * bottom;
+
+        }
+
         void addStore(int x, int y, string name, list<int>productIds){
-            Type targetPoint = getElement(x, y);
+            RoadObjectType targetPoint = getElement(x, y);
+            if (targetPoint.XCoord==-1 & targetPoint.YCoord==-1){
+                throw NoRoadException();
+//                if (!elementExist(x, y)){
+//                    checkNeighboardPoints(targetPoint);
+//                }
+                targetPoint.setCoords(x,y);
+            }
             targetPoint.addStore(name, productIds);
             items[x][y] = targetPoint;
          };
@@ -101,17 +131,18 @@ class Map {
         }
 
         void processOrder(int x, int y, int deliveryTime, list<int>productIds){
-            Type obj = getElement(x, y);
-            list<pair <Store, pair<list<int>, list<RoadObject>>>> deals;
+            RoadObjectType obj = getElement(x, y);
+            list<pair<list<int>, list<RoadObject>>> deals;
             for ( auto X : items )
             {
                 for ( auto Y : X.second ){
-                    list<int> haveProducts = Y.second.store.checkProduct(productIds);
+                    if (Y.second.store == NULL) { continue;};
+
+                    list<int> haveProducts = Y.second.store->checkProduct(productIds);
                     if (haveProducts.size() > 0){
                         list <RoadObject> pathToOrder = getPathList(Y.second, obj);
-                        pair<Store, pair<list<int>, list<RoadObject>>>
-                                storePair (Y.second.store, pair<list<int>,
-                                        list<RoadObject>>( haveProducts, pathToOrder));
+                        pair<list<int>, list<RoadObject>>
+                                storePair( haveProducts, pathToOrder);
                         deals.push_back(storePair);
                     }
                 };
@@ -124,7 +155,8 @@ class Map {
         void nextTick(int tickCount){
             for ( auto X : items ){
                 for ( auto Y : X.second ){
-                    list<OrderPart> orders = Y.second.store.nextTick(tickCount);
+                    if (Y.second.store == NULL){ continue;}
+                    list<OrderPart> orders = Y.second.store->nextTick(tickCount);
                     for (OrderPart orderPartToDelivery : orders){
                         list<RoadObject> convertedPath;
                         for (auto pathPair: orderPartToDelivery.path){
@@ -133,7 +165,7 @@ class Map {
                         pair<int, int> fromChords = orderPartToDelivery.path.front();
                         RoadObject from = items[fromChords.first][fromChords.second];
                         items[fromChords.first][fromChords.second] = from.startCar(convertedPath,
-                                orderPartToDelivery, Y.second.store);
+                                orderPartToDelivery, *Y.second.store);
                     };
                     Y.second.nextTick(tickCount, items);
                 };

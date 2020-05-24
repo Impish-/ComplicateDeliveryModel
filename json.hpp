@@ -16630,7 +16630,7 @@ using number_float_t = NumberFloatType;
     @brief a type for a packed binary type
 
     This type is a type designed to carry binary data that appears in various
-    serialized formats, such as CBOR's Major Type 2, MessagePack's bin, and
+    serialized formats, such as CBOR's Major RoadObjectType 2, MessagePack's bin, and
     BSON's generic binary subtype. This type is NOT a part of standard JSON and
     exists solely for compatibility with these binary types. As such, it is
     simply defined as an ordered sequence of zero or more byte values.
