@@ -155,7 +155,7 @@ class Map {
         void nextTick(int tickCount){
             for ( auto X : items ){
                 for ( auto Y : X.second ){
-                    if (Y.second.store == NULL){ continue;}
+                    if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
                     list<OrderPart> orders = Y.second.store->nextTick(tickCount);
                     for (OrderPart orderPartToDelivery : orders){
                         list<RoadObject> convertedPath;
@@ -169,6 +169,7 @@ class Map {
                     };
                     Y.second.nextTick(tickCount, items);
                 };
+
             }
         };
         json serialize(){
