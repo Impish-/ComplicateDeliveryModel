@@ -52,7 +52,7 @@ int main() {
                         map.nextTick(i++);
 
                         string body = map.serialize().dump();
-                        std::cout <<"handler :"<< body << endl;
+//                        std::cout <<"handler :"<< body << endl;
                         return req->create_response()
                         .set_body(std::move( body ))
                         .append_header( restinio::http_field::content_type, "application/json; charset=utf-8" )
