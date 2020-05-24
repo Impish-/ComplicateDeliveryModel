@@ -19,6 +19,7 @@ int test_road(Map<RoadObject> & map){
     map.insert(15, 17);
     map.insert(16, 17);
     map.insert(17, 17);
+    map.insert(17, 18);
     map.insert(18, 18);
     map.insert(19, 16);
     map.insert(13, 15);
@@ -67,8 +68,9 @@ int main() {
                     .port(8080)
                     .request_handler([map, i ](auto req) mutable{
                         map.nextTick(i++);
-                        if (i % 10 == 0){
-                            test_initials(map);
+                        if (i == 10){
+                            list<int> orderProducts = {1, 3, 5, 8};
+                            map.processOrder(13, 17, 0, orderProducts);
                         }
 
                         string body = map.serialize().dump();
