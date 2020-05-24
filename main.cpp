@@ -3,7 +3,7 @@
 #include "models/product.h"
 #include <iostream>
 #include <unistd.h>
-//#include <restinio/all.hpp>
+#include <restinio/all.hpp>
 
 
 
@@ -36,34 +36,8 @@ int test_initials(Map<RoadObject> & map) {
     map.processOrder(13, 17, 0, orderProducts);
 }
 
-//using router_t = restinio::router::express_router_t<>;
-//void runServer(&map){
-//    int i;
-//    using my_traits_t2 = restinio::traits_t<
-//            restinio::asio_timer_manager_t,
-//            restinio::single_threaded_ostream_logger_t,
-//            router_t >;
-//
-//    restinio::run(
-//            restinio::on_this_thread<>()
-//                    .address("localhost")
-//                    .port(8080)
-//                    .request_handler([map, i ](auto req) mutable{
-//                        map.nextTick(i++);
-//                        if (i % 10 == 0){
-//                            test_initials(map);
-//                        }
-//
-//                        string body = map.serialize().dump();
-////                        std::cout <<"handler :"<< body << endl;
-//                        return req->create_response()
-//                                .set_body(std::move( body ))
-//                                .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
-//                                .append_header("Access-Control-Allow-Origin", "*")
-//                                .done();
-//                    })
-//    );
-//}
+using router_t = restinio::router::express_router_t<>;
+
 
 
 
@@ -72,13 +46,39 @@ int main() {
     test_road(map);
     test_initials(map);
 //    runServer(map);
-    cout << "DO LOOP "<< endl;
+//    cout << "DO LOOP "<< endl;
     int i =0 ;
-    while (i<100){
-        cout << "TICK: " << i << endl;
-        map.nextTick(i++);
-        cout << map.serialize() << endl;
-        sleep(3);
-    }
+//    while (i<100){
+//        cout << "TICK: " << i << endl;
+//        map.nextTick(i++);
+//        cout << map.serialize() << endl;
+//        sleep(3);
+//    }
+
+//    int i;
+//    using my_traits_t2 = restinio::traits_t<
+//            restinio::asio_timer_manager_t,
+//            restinio::single_threaded_ostream_logger_t,
+//            router_t >;
+
+    restinio::run(
+            restinio::on_this_thread<>()
+                    .address("localhost")
+                    .port(8080)
+                    .request_handler([map, i ](auto req) mutable{
+                        map.nextTick(i++);
+                        if (i % 10 == 0){
+                            test_initials(map);
+                        }
+
+                        string body = map.serialize().dump();
+//                        std::cout <<"handler :"<< body << endl;
+                        return req->create_response()
+                                .set_body(std::move( body ))
+                                .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                .append_header("Access-Control-Allow-Origin", "*")
+                                .done();
+                    })
+    );
     return 0;
 }
