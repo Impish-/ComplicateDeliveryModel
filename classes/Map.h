@@ -46,8 +46,8 @@ class Map {
         };
 
         bool elementExist(int XCoord, int YCoord){
-            RoadObjectType * z = &items[XCoord][YCoord];
-            return (z->XCoord > -1 & z->YCoord > -1);
+            RoadObjectType  z = items[XCoord][YCoord];
+            return (z.XCoord > -1 & z.YCoord > -1);
         };
 
         RoadObjectType getElement(int XCoord, int YCoord){
@@ -56,9 +56,6 @@ class Map {
 
         void remove(int XCoord, int YCoord){
             items[XCoord].erase(YCoord);
-        };
-        void tickH(pair<const int, pair<int, map<int, RoadObjectType >> >& pair){
-            cout << "sdf" << endl;
         };
 
         list<RoadObjectType> checkBranch(RoadObjectType roadBranc, RoadObjectType to, list<RoadObjectType> pathList, RoadObjectType fromRoad){
@@ -100,23 +97,74 @@ class Map {
            return getPathList(from, to, a);
        }
 
-       void checkNeighboardPoints(RoadObjectType curPoint){
-            bool left = elementExist(curPoint.XCoord -1, curPoint.YCoord);
-            bool right = elementExist(curPoint.XCoord -1, curPoint.YCoord);
-            bool top = elementExist(curPoint.XCoord, curPoint.YCoord -1);
-            bool bottom = elementExist(curPoint.XCoord, curPoint.YCoord +1);
-            bool result = left * right * top * bottom;
+       bool checkNeighboardPoints(RoadObjectType curPoint){
+            bool left = !(curPoint.XCoord -1 > 0) & elementExist(curPoint.XCoord -1, curPoint.YCoord);
+            bool right = !(curPoint.XCoord +1 <= N) & elementExist(curPoint.XCoord +1, curPoint.YCoord);
+            bool top = !(curPoint.YCoord -1 > 0) & elementExist(curPoint.XCoord, curPoint.YCoord -1);
+            bool bottom = !(curPoint.XCoord +1 <= M) & elementExist(curPoint.XCoord, curPoint.YCoord +1);
+            bool result = left + right + top + bottom;
+            return result;
+        }
 
+
+        int value(bool way, int zzz){
+            if (way) return zzz+1;
+            return zzz-1 ;
+        }
+
+        void buildRoad(int x, int y, list<pair<int, int>>&road){
+            if(checkNeighboardPoints(getElement(x, y))){
+                for (auto r : road){
+                    insert(r.first, r.second);
+                }
+                return;
+            };
+
+            int target_x;
+            int target_y;
+
+            if (M/2 > x){
+                target_x = M/2;
+            };
+
+            if (N/2 > y){
+                target_x = N/2;
+            };
+
+
+            bool ox = target_x > x;
+            bool oy = target_y > y;
+            float  rx = abs(M/2 - x);
+            float  ry = abs(N/2 - y);
+
+            pair<int, int> args;
+            if(rx > ry) {
+                int x1 = value(ox , x);
+                args = pair<int, int> (x1, y);
+            }else{
+                int y1 = value(oy, y);
+                args = pair<int, int> (x, y1);
+            }
+
+//            if(road.back().first == & road.back().second == y){
+//
+//            }
+            road.push_back(args);
+            return buildRoad(args.first, args.second, road);
         }
 
         void addStore(int x, int y, string name, list<int>productIds){
             RoadObjectType targetPoint = getElement(x, y);
-            if (targetPoint.XCoord==-1 & targetPoint.YCoord==-1){
-                throw NoRoadException();
-//                if (!elementExist(x, y)){
-//                    checkNeighboardPoints(targetPoint);
-//                }
-                targetPoint.setCoords(x,y);
+            if (x==19 & y==50){
+//                throw NoRoadException();
+                    targetPoint.setCoords(19,50);
+                    bool haveNeibprds = checkNeighboardPoints(targetPoint);
+                    if (!haveNeibprds){
+                        list<pair<int, int>> road;
+                        buildRoad(x,y, road);
+                    };
+
+
             }
             targetPoint.addStore(name, productIds);
             items[x][y] = targetPoint;

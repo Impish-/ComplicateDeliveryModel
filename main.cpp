@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <restinio/all.hpp>
 
-
+using router_t = restinio::router::express_router_t<>;
 
 int test_road(Map<RoadObject> & map){
     map.insert(10, 15);
@@ -24,6 +24,7 @@ int test_road(Map<RoadObject> & map){
     map.insert(19, 16);
     map.insert(13, 15);
     map.insert(20, 15);
+
 };
 
 int test_initials(Map<RoadObject> & map) {
@@ -32,29 +33,27 @@ int test_initials(Map<RoadObject> & map) {
     list<int> b = {6, 7, 8, 9, 10};
 
     map.addStore(10, 15, "TestStore", a);
-    map.addStore(20, 15, "TestStore2", b);
+    map.addStore(19, 50, "TestStore2", b);
     list<int> orderProducts = {1, 3, 5, 8};
     map.processOrder(13, 17, 0, orderProducts);
 }
 
-using router_t = restinio::router::express_router_t<>;
 
 
 
 
 int main() {
-    Map<RoadObject> map = Map<RoadObject>(100,100);
+    Map<RoadObject> map = Map<RoadObject>(20,50);
     test_road(map);
     test_initials(map);
-//    runServer(map);
-//    cout << "DO LOOP "<< endl;
+
     int i =0 ;
-//    while (i<100){
-//        cout << "TICK: " << i << endl;
-//        map.nextTick(i++);
-//        cout << map.serialize() << endl;
-//        sleep(3);
-//    }
+    while (i<100){
+        cout << "TICK: " << i << endl;
+        map.nextTick(i++);
+        cout << map.serialize() << endl;
+        sleep(3);
+    }
 
 //    int i;
 //    using my_traits_t2 = restinio::traits_t<
