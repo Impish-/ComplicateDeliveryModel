@@ -3,23 +3,12 @@
 #include "models/product.h"
 #include <iostream>
 #include <unistd.h>
+#include <restinio/all.hpp>
+
+using router_t = restinio::router::express_router_t<>;
 
 
-using namespace std;
-
-
-int main() {
-//    ns::product p {60, "Ned Flanders", "744 Evergreen Terrace", };
-//    json j = p;
-//    std::cout << j << std::endl;
-//
-//    auto p2 = j.get<ns::product>();
-//
-//    to_json(j, p2)
-//    cout << ns::.id << std::endl;
-
-    Map<RoadObject> map = Map<RoadObject>(100,100);
-
+int test_initials(Map<RoadObject> & map){
     //test insert
     RoadObject start_road = map.insert(10, 15);
     map.insert(11, 15);
@@ -41,28 +30,34 @@ int main() {
     list<int> orderProducts = {1,  3,  5,  8};
     map.processOrder(13,17, 0, orderProducts);
 
-
-//    map.update(11, 17, second_start_road);
-//    map.update(10, 15, start_road);
-//    map.update(12, 15, end_road);
-//
-//    list<RoadObject> path1 = map.getPathList(start_road, end_road);
-//    list<RoadObject> path2 = map.getPathList(second_start_road, end_road);
-//
-//    Car<RoadObject> t = start_road.startCar(path1);
-//    Car<RoadObject> t3 = second_start_road.startCar(path2);
-
     map.update(11, 17, second_start_road);
     map.update(10, 15, start_road);
     map.update(12, 15, end_road);
+}
 
-    int tick = 0;
+int main() {
+    Map<RoadObject> map = Map<RoadObject>(100,100);
+    test_initials(map);
+    int i;
+    using my_traits_t2 = restinio::traits_t<
+            restinio::asio_timer_manager_t,
+            restinio::single_threaded_ostream_logger_t,
+            router_t >;
 
-    for (int i=0 ; i<50; i ++){
-        cout << "TICK :" << tick <<endl;
-        map.nextTick(tick ++);
-        cout << map.serialize() << endl;
-        sleep(1);
-    }
+    restinio::run(
+            restinio::on_this_thread<>()
+                    .address("localhost")
+                    .port(8080)
+                    .request_handler([map, i ](auto req) mutable{
+                        map.nextTick(i++);
+
+                        string body = map.serialize().dump();
+                        std::cout <<"handler :"<< body << endl;
+                        return req->create_response()
+                        .set_body(std::move( body ))
+                        .append_header( restinio::http_field::content_type, "application/json; charset=utf-8" )
+                        .done();
+                    })
+            );
     return 0;
 }
