@@ -140,13 +140,15 @@ class Map {
             }
         };
         json serialize(){
-            json pointsArray;
+            json mapJSON;
+            mapJSON["points"] = json::array();
             for ( auto X : items ) {
                 for (auto Y : X.second) {
-                    pointsArray.push_back(Y.second.serialize());
+                    if (Y.second.XCoord>0 & Y.second.YCoord>0)
+                        mapJSON["points"].push_back(Y.second.serialize());
                 };
             };
-            return pointsArray;
+            return mapJSON;
         };
 };
 
