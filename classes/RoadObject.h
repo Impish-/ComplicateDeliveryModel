@@ -6,6 +6,10 @@
 #define MDILIVERY_ROADOBJECT_H
 
 #include "MapPoint.h"
+#include "../json.hpp"
+
+using nlohmann::json;
+
 
 class RoadObject: MapPoint{
 private:
@@ -141,8 +145,20 @@ public:
             };
             car.nextTick(tickCount, items, *this);
         };
-//        items[XCoord][YCoord] = *this;
     };
+    json serialize(){
+        json point;
+        point["x"] = this->XCoord;
+        point["y"] = this->YCoord;
+        point["cars"] = json::array();
+        point["store"] = this->store.serialize();
+        point["order"] = this->activeOrder.serialize();
+
+        for (auto car: this->cars){
+            point["cars"].push_back(car.name);
+        };
+        return point;
+    }
 };
 
 

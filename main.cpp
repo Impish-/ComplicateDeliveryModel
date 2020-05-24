@@ -16,7 +16,7 @@ int main() {
 //    auto p2 = j.get<ns::product>();
 //
 //    to_json(j, p2)
-//    std::cout << ns::.id << std::endl;
+//    cout << ns::.id << std::endl;
 
     Map<RoadObject> map = Map<RoadObject>(100,100);
 
@@ -63,7 +63,5 @@ int main() {
         map.nextTick(tick ++);
         sleep(1);
     }
-
-
     return 0;
 }

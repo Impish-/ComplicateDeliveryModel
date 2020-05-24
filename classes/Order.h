@@ -9,6 +9,10 @@
 #include "MapPoint.h"
 #include "Store.h"
 #include <list>
+#include "../json.hpp"
+
+using nlohmann::json;
+
 
 template <class T>
 class Order {
@@ -16,10 +20,12 @@ class Order {
         int deliveryTime;
         list<pair <Store, pair<list<int>, list<T>>>> deals;
         bool finish = false;
+        string customer;
 
         Order() = default;
         Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair <Store, pair<list<int>,
                 list<T>>>> ideals,  map<int, map<int, T >>& items){
+            this->customer = "Неведомый";
             this->deliveryTime = ideliveryTime;
             this->deals = ideals;
             list <pair<int, int>> pathCoords;
@@ -41,6 +47,16 @@ class Order {
         void genParts(){};
         void status(){}; //Процент исполеннных частей.
         void setStoresList(){};
+
+    json serialize(){
+        json order;
+        order["customer"] = this->customer;
+        order["deliveryTime"] = this->deliveryTime;
+        order["status"] = this->finish;
+
+        return order;
+    }
+
     };
 
 #endif //MDILIVERY_ORDER_H

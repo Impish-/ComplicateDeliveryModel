@@ -6,6 +6,9 @@
 #include <set>
 #include <iostream>
 #include "OrderPart.h"
+#include "../json.hpp"
+
+using nlohmann::json;
 
 
 using namespace std;
@@ -13,7 +16,6 @@ using namespace std;
 class Store{
     public:
         string name;
-        int carsCount = 0;
         list<pair<int, OrderPart>> schedule;
         list<OrderPart> deliveryNotify;
         list<int> productIds;
@@ -64,6 +66,23 @@ class Store{
         };
         return ordersToDelivery;
     };
+
+    json serialize(){
+        json store;
+        store["productIds"] = json::array();
+        store["schedule"] = json::array();
+        store["name"] = this->name;
+        for (auto x : this->productIds){
+            store["schedule"].push_back(x);
+        };
+        for (auto x : this->schedule){
+            json schedule;
+            schedule["time"] = x.first;
+            schedule["coords"] = json ::array({x.second.deliveryTo.first, x.second.deliveryTo.second});
+            store["schedule"] = schedule;
+        };
+        return store;
+    }
 };
 
 #endif //MDILIVERY_STORE_H

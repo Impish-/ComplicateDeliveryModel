@@ -5,9 +5,11 @@
 #include <map>
 #include <list>
 #include "RoadObject.h"
-
+#include "../json.hpp"
 
 using namespace std;
+using nlohmann::json;
+
 
 template <class Type>
 class Map {
@@ -120,8 +122,7 @@ class Map {
         }
 
         void nextTick(int tickCount){
-            for ( auto X : items )
-            {
+            for ( auto X : items ){
                 for ( auto Y : X.second ){
                     list<OrderPart> orders = Y.second.store.nextTick(tickCount);
                     for (OrderPart orderPartToDelivery : orders){
@@ -138,8 +139,15 @@ class Map {
                 };
             }
         };
-        void serialize();
-        void unSerialize();
+        json serialize(){
+            json pointsArray;
+            for ( auto X : items ) {
+                for (auto Y : X.second) {
+                    pointsArray.push_back(Y.second.serialize());
+                };
+            };
+            return pointsArray;
+        };
 };
 
 
