@@ -61,6 +61,7 @@ int main() {
     for (int i=0 ; i<50; i ++){
         cout << "TICK :" << tick <<endl;
         map.nextTick(tick ++);
+        cout << map.serialize() << endl;
         sleep(1);
     }
     return 0;
