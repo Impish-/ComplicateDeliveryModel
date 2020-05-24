@@ -18,7 +18,7 @@ template <class T>
 class Car {
     private:
         list<T> path;
-        Store owner;
+        Store store;
         OrderPart orderPart;
     public:
         string name;
@@ -32,11 +32,13 @@ class Car {
         };
 
         Car(){};
-        Car(list<T> & carPath){
+        Car(list<T> & carPath, OrderPart & orderPart, Store & store){
             this->path = carPath;
             this->current = path.front();
             this->wayTo = path.back();
             this->tickUpdated = -1;
+            this->orderPart = orderPart;
+            this->store = store;
         };
 
         void setCurrent(T& icurrent){
@@ -54,6 +56,7 @@ class Car {
 
             if (current == wayTo){
                 cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
+                store.delivered(orderPart);
                 items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
                 return;
             };

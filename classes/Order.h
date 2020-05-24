@@ -18,9 +18,10 @@ class Order {
         bool finish = false;
 
         Order() = default;
-        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair <Store, pair<list<int>, list<T>>>> ideals,  map<int, map<int, T >>& items){
-            deliveryTime = ideliveryTime;
-            deals = ideals;
+        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair <Store, pair<list<int>,
+                list<T>>>> ideals,  map<int, map<int, T >>& items){
+            this->deliveryTime = ideliveryTime;
+            this->deals = ideals;
             list <pair<int, int>> pathCoords;
             for (pair <Store, pair<list<int>, list<T>>> deal : deals){
                 Store store = deal.first;

@@ -15,6 +15,7 @@ class Store{
         string name;
         int carsCount = 0;
         list<pair<int, OrderPart>> schedule;
+        list<OrderPart> deliveryNotify;
         list<int> productIds;
         pair<int, int> coords;
 
@@ -30,8 +31,16 @@ class Store{
             return *this;
         };
 
-        void doDelivery(){};
-        void runOrderPart(){};
+        void delivered(OrderPart & part){
+            list<pair<int, OrderPart>>::iterator it = schedule.begin();
+            while (it != schedule.end()) {
+                if ((*it).second == part) {
+                    it = schedule.erase(it);
+                } else
+                    it++;
+            }
+            part.setDeliveredStatus(true);
+        };
 
         list<int> checkProduct(list<int> orderProductIds){
             list<int> result;

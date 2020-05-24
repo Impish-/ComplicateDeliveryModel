@@ -55,15 +55,15 @@ public:
             };
         };
         return false;
-    }
-
-    Car<RoadObject> getCar(Car<RoadObject> checkingCar){
-        for ( auto car : cars ) {
-            if (checkingCar == car) {
-                return car;
-            };
-        };
     };
+
+//    Car<RoadObject> getCar(Car<RoadObject> checkingCar){
+//        for ( auto car : cars ) {
+//            if (checkingCar == car) {
+//                return car;
+//            };
+//        };
+//    };
 
     void updateCar(Car<RoadObject> checkingCar){
         list<Car<RoadObject>> newCars;
@@ -76,7 +76,7 @@ public:
             cars = newCars;
             return;
         };
-    }
+    };
 
     void leftCar(Car<RoadObject> outCar){
         list<Car<RoadObject>> newCars;
@@ -106,8 +106,8 @@ public:
         return *this;
     }
 
-    RoadObject startCar(list<RoadObject> carPath){
-        Car<RoadObject> newCar = Car<RoadObject>(carPath);
+    RoadObject startCar(list<RoadObject> carPath, OrderPart & orderPart, Store & store){
+        Car<RoadObject> newCar = Car<RoadObject>(carPath, orderPart, store);
         newCar.name = rnd();
         return incomingCar(newCar, true);
     };
@@ -124,8 +124,6 @@ public:
         auto s = "<MapPoint X:" + to_string(XCoord) + ", Y:" + to_string(YCoord) + ">";
         return s;
     };
-
-
 
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){

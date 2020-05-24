@@ -124,14 +124,15 @@ class Map {
             {
                 for ( auto Y : X.second ){
                     list<OrderPart> orders = Y.second.store.nextTick(tickCount);
-                    for (OrderPart order : orders){
+                    for (OrderPart orderPartToDelivery : orders){
                         list<RoadObject> convertedPath;
-                        for (auto pathPair: order.path){
+                        for (auto pathPair: orderPartToDelivery.path){
                             convertedPath.push_back(items[pathPair.first][pathPair.second]);
                         };
-                        pair<int, int> fromChords = order.path.front();
+                        pair<int, int> fromChords = orderPartToDelivery.path.front();
                         RoadObject from = items[fromChords.first][fromChords.second];
-                        items[fromChords.first][fromChords.second] = from.startCar(convertedPath);
+                        items[fromChords.first][fromChords.second] = from.startCar(convertedPath,
+                                orderPartToDelivery, Y.second.store);
                     };
                     Y.second.nextTick(tickCount, items);
                 };

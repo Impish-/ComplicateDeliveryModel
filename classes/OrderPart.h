@@ -30,6 +30,10 @@ public:
     };
 
     void setDeliveredStatus(bool newStatus){delivered=newStatus;};
+
+    bool operator == (const OrderPart other){
+        return this->path == other.path;
+    };
 };
 
 #endif //MDILIVERY_ORDERPART_H
