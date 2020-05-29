@@ -175,6 +175,7 @@ class Map {
                     if (Y.second.store == NULL) { continue;};
 
                     list<int> haveProducts = Y.second.store->checkProduct(productIds);
+
                     if (haveProducts.size() > 0){
                         list <RoadObject> pathToOrder = getPathList(Y.second, obj);
                         pair<list<int>, list<RoadObject>>

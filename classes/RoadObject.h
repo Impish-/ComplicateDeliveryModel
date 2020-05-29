@@ -152,23 +152,23 @@ public:
         json point;
         point["x"] = this->XCoord;
         point["y"] = this->YCoord;
-        cout << "\nSERIALIZE X:" << XCoord << ", Y:" << YCoord <<endl;
-
-        cout << "ORDERS";
+//        cout << "\nSERIALIZE X:" << XCoord << ", Y:" << YCoord <<endl;
+//
+//        cout << "ORDERS";
         if (this->activeOrder != NULL) (point["order"] = this->activeOrder->serialize());
-        cout << "- done"<<endl;
-        cout << "STORE"  ;
+//        cout << "- done"<<endl;
+//        cout << "STORE"  ;
         if (this->store != NULL){point["store"] = this->store->serialize();}
-        cout << "- done"<<endl;
-        cout << "CARS" ;
+//        cout << "- done"<<endl;
+//        cout << "CARS" ;
         if (this->cars.size() > 0){
             point["cars"] = json::array();
             for (auto car: this->cars){
                 point["cars"].push_back(car.name);
             };
         }
-        cout << "- done"<<endl;
-        cout <<point <<endl;
+//        cout << "- done"<<endl;
+//        cout <<point <<endl;
 
         return point;
     }
