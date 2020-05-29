@@ -8,21 +8,10 @@ using router_t = restinio::router::express_router_t<>;
 
 int test_road(Map<RoadObject> & map){
 //    map.insert(10, 15);
-    map.insert(11, 15);
-    map.insert(11, 16);
     map.insert(11, 17);
     map.insert(12, 16);
     map.insert(12, 17);
     map.insert(13, 17);
-    map.insert(14, 17);
-    map.insert(15, 17);
-    map.insert(16, 17);
-    map.insert(17, 17);
-    map.insert(18, 17);
-    map.insert(18, 18);
-    map.insert(19, 16);
-    map.insert(13, 15);
-    map.insert(20, 15);
 };
 
 int test_initials(Map<RoadObject> & map) {
@@ -35,6 +24,9 @@ int test_initials(Map<RoadObject> & map) {
 
     a = {6, 7, 8, 9, 10};
     map.addStore(2, 47, "TestStore3", a);
+
+    a = {10, 8};
+    map.addStore(4, 25, "TestStore4", a);
 }
 
 int main() {

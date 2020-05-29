@@ -44,12 +44,16 @@ class Store{
             part.setDeliveredStatus(true);
         };
 
+        bool checkSingleProductAvailable(int productID){
+            list<int>::iterator it;
+            it = std::find(productIds.begin(), productIds.end(), productID);
+            return (it != productIds.end());
+        }
+
         list<int> checkProduct(list<int> orderProductIds){
             list<int> result;
-            list<int>::iterator it;
             for (auto product : orderProductIds){
-                it = std::find(productIds.begin(), productIds.end(), product);
-                if(it != productIds.end())
+                if(checkSingleProductAvailable(product))
                     result.push_back(product);
             }
             return result;
