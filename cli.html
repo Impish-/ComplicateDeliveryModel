@@ -184,12 +184,15 @@
         }
 
         if (point.order){
-          if(point.order.status){
-            // доставлено
-            ct.css("background", "#eac407");
-          }else {
-            // не доставлено
-            ct.css("background", "#16d24b");
+          console.log(point.order);
+          if(point.order.finished){// доставлено
+            (point.order.expired)?
+                    ct.css("background", "#5e5d02"): // c опозданием
+                    ct.css("background", "#e7cc7f"); // вовремя
+          }else {            // не доставлено
+            (point.order.expired)?
+              ct.css("background", "#e207ea"): // опаздывает
+              ct.css("background", "#16d24b"); // не опаздывает
           }
         }
         if (point.store){

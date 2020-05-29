@@ -134,6 +134,9 @@ public:
 
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
+        if (activeOrder !=NULL){
+            activeOrder->checkExpired(tickCount);
+        }
         if ((cars.size() < 1)) return;
         if (haveActions(tickCount)) return;
         cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
@@ -150,7 +153,7 @@ public:
         };
 
         if (activeOrder !=NULL){
-            activeOrder->nextTick(tickCount, items);
+            activeOrder->checkParts(tickCount);
         }
     };
     json serialize(){

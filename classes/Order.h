@@ -19,6 +19,7 @@ class Order {
     public:
         int deliveryTime;
         bool finish = false;
+        bool expired = false;
         string customer;
         list<OrderPart *> parts;
         list<int> waitingProducts;
@@ -56,25 +57,27 @@ class Order {
         };
     //    Store getNearStore(int product_id){};
 
-        void genParts(){};
-        void status(){}; //Процент исполеннных частей.
-        void orderPartDelivered(){
-
+        void checkExpired(int tickCount){
+            expired = (tickCount > deliveryTime);
         };
 
-        void nextTick(int tickCount, map<int, map<int, T >>& items){
+        void checkParts(int tickCount){
             OrderPart * removePart;
             for (OrderPart * part : parts){
                 if (!part->getDeliveredStatus()){
                     continue;
                 }
-                deliveredProducts.insert(
-                        waitingProducts.end(), part->products.begin(), part->products.end()
-                        );
+                for (auto pId: part->products){
+                    deliveredProducts.push_back(pId);
+                }
                 removePart = part;
             }
             parts.remove(removePart);
+            delete removePart;
             finish = (parts.size() == 0);
+            if (finish){
+                expired = (tickCount <= deliveryTime);
+            }
         }
 
     json serialize(){
@@ -83,7 +86,8 @@ class Order {
 
 //        order["customer"] = this->customer;
         order["deliveryTime"] = deliveryTime;
-        order["status"] = finish;
+        order["finished"] = finish;
+        order["expired"] = expired;
 
         return order;
     }
