@@ -200,7 +200,8 @@ class Map {
             return pathCoords;
         }
 
-    int pathCalcDeliveryTime(list<T_RoadObjectType> path){
+
+    int pathCalcBarriers(list<T_RoadObjectType> path){
         list<int> crossroads; // int - кол-во джорог
 
         pair<int, int> from; // направление
@@ -216,9 +217,11 @@ class Map {
             crossroads.push_back((result > 3)?2:1);
         }
 
-        int sum = std::accumulate(crossroads.begin(), crossroads.end(), 0);;
+        return std::accumulate(crossroads.begin(), crossroads.end(), 0);
+    }
 
-        return path.size() + sum;
+    int pathCalcDeliveryTime(list<T_RoadObjectType> path){
+        return path.size() + pathCalcBarriers(path);
     }
 
        bool getDeliveryCandidates(list<int> & productIds,
@@ -312,7 +315,7 @@ class Map {
                     continue;
                 }
                 pair<list<int>, list<RoadObject>> storePair(
-                            canDeliveryProducts,
+                            orderHere,
                             getPathList(
                                     getElement(deliveryCandidate.first->coords.first, deliveryCandidate.first->coords.second),
                                     orderPoint
