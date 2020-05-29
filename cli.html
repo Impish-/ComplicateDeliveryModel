@@ -184,11 +184,17 @@
         }
 
         if (point.order){
-          console.log(point.order)
-          ct.css("background", "#16d24b");
+          if(point.order.status){
+            // доставлено
+            ct.css("background", "#eac407");
+          }else {
+            // не доставлено
+            ct.css("background", "#16d24b");
+          }
         }
         if (point.store){
           ct.css("background", "#ea0747");
+
         }
         // console.log(ct)
       });
