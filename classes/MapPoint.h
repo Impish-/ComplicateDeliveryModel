@@ -38,20 +38,6 @@ string rnd(){
     return Str;
 }
 
-class CException
-{
-public:
-    void virtual PrintMessage() {}
-};
-
-class RoadPointIsFull : public CException
-{
-public:
-    void virtual PrintMessage()
-    {
-        cout << "Hallo from exception"; // **
-    }
-};
 
 class Barrier{
 public:

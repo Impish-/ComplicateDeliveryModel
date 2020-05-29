@@ -16,8 +16,8 @@ find_package(restinio CONFIG REQUIRED)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Mdilivery main.cpp classes/Map.h classes/Car.h
-        classes/Order.h classes/Store.h classes/MapPoint.h models/product.h
-        classes/OrderPart.h classes/RoadObject.h models/map/map.h)
+        classes/Order.h classes/Store.h classes/MapPoint.h
+        classes/OrderPart.h classes/RoadObject.h  classes/exceptions.h)
 
 target_link_libraries(Mdilivery restinio::restinio)
 target_link_libraries(Mdilivery ${CONAN_LIBS})

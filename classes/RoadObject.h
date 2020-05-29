@@ -1,7 +1,3 @@
-//
-// Created by Соколов Илья on 23.05.2020.
-//
-
 #ifndef MDILIVERY_ROADOBJECT_H
 #define MDILIVERY_ROADOBJECT_H
 
@@ -9,7 +5,6 @@
 #include "../json.hpp"
 
 using nlohmann::json;
-
 
 class RoadObject: MapPoint{
 private:
@@ -102,7 +97,7 @@ public:
     }
 
     RoadObject incomingCar(Car<RoadObject>& incomeCar, bool startFromHere=false){
-        if (cars.size() > carMaxCount){
+        if (cars.size() == carMaxCount){
             throw RoadPointIsFull();
         }
         if(!carExist(incomeCar)) cars.push_back(incomeCar); // if not exist
@@ -140,6 +135,7 @@ public:
         if ((cars.size() < 1)) return;
         if (haveActions(tickCount)) return;
         cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
+
 
         for ( auto car : cars ){
             if (car.tickUpdated == tickCount){

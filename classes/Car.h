@@ -10,6 +10,7 @@
 #include <list>
 #include <map>
 #include "Store.h"
+#include "exceptions.h"
 
 
 using namespace std;
@@ -68,8 +69,12 @@ class Car {
             bool next = false;
             for ( auto road : path ){
                 if (next){
-                    current = items[road.XCoord] [road.YCoord].incomingCar(*this);
-                    items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
+                    try{
+                        current = items[road.XCoord] [road.YCoord].incomingCar(*this);
+                        items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
+                    } catch (RoadPointIsFull& ex) {
+                        cout << "\t\t"<< _str() <<" CANT MOVIE, WAITING" <<endl;
+                    }
                     break;
                 }
                 if (road == placedRoad){
