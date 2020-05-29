@@ -35,7 +35,9 @@ class Map {
         };
         RoadObjectType insert(int x, int y){
 //            Map self = *this;
+//            if (!elementExist(x,y)){}
             items[x][y] = RoadObjectType(x, y);
+
 //            items[x][y].setMapObject(Map<RoadObject>, this);
             return getElement(x,y);
         };
@@ -107,67 +109,53 @@ class Map {
         }
 
 
-        int value(bool way, int zzz){
-            if (way) return zzz+1;
-            return zzz-1 ;
-        }
 
         void buildRoad(int x, int y, list<pair<int, int>>&road){
-            if(checkNeighboardPoints(getElement(x, y))){
-                for (auto r : road){
-                    insert(r.first, r.second);
-                }
-                return;
-            };
+            bool ox = (M/2) > x;
+            bool oy = (N/2) > y;
 
-            int target_x;
-            int target_y;
-
-            if (M/2 > x){
-                target_x = M/2;
-            };
-
-            if (N/2 > y){
-                target_x = N/2;
-            };
-
-
-            bool ox = target_x > x;
-            bool oy = target_y > y;
             float  rx = abs(M/2 - x);
             float  ry = abs(N/2 - y);
 
-            pair<int, int> args;
-            if(rx > ry) {
-                int x1 = value(ox , x);
-                args = pair<int, int> (x1, y);
-            }else{
-                int y1 = value(oy, y);
-                args = pair<int, int> (x, y1);
+            if(rx == 0 & ry == 0){
+                insert(x, y);
+                for (auto r : road){
+                    try{
+                        insert(r.first, r.second);
+                    } catch (...) {
+                            cout << "except insert:  " << x<<", " <<y  << endl;
+                        }
+                    }
+                return;
             }
 
-//            if(road.back().first == & road.back().second == y){
-//
-//            }
+            auto value = [x, y, ox, oy](bool expr){
+                return (expr) ?pair<int, int>(((ox)? x+1: x-1), y):
+                    pair<int, int>(x, ((oy)? y+1: y-1));
+
+            };
+            auto args = value(rx>ry);
+
             road.push_back(args);
             return buildRoad(args.first, args.second, road);
         }
 
+
         void addStore(int x, int y, string name, list<int>productIds){
-            RoadObjectType targetPoint = getElement(x, y);
-            if (x==19 & y==50){
+            RoadObjectType newStorePoint = getElement(x, y);
+            if (newStorePoint.XCoord == -1 & newStorePoint.YCoord == -1){
 //                throw NoRoadException();
-                    targetPoint.setCoords(19,50);
-                    bool haveNeibprds = checkNeighboardPoints(targetPoint);
+                    newStorePoint.setCoords(x, y);
+
+                    bool haveNeibprds = checkNeighboardPoints(newStorePoint);
                     if (!haveNeibprds){
                         list<pair<int, int>> road;
                         buildRoad(x,y, road);
                     };
-
-
             }
-            targetPoint.addStore(name, productIds);
-            items[x][y] = targetPoint;
+            newStorePoint.addStore(name, productIds);
+            items[x][y] = newStorePoint;
+
          };
 
         list <pair<int, int>> convertRoadObjectToCoords(list<RoadObject> way){

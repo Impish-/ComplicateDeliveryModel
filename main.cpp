@@ -8,7 +8,7 @@
 using router_t = restinio::router::express_router_t<>;
 
 int test_road(Map<RoadObject> & map){
-    map.insert(10, 15);
+//    map.insert(10, 15);
     map.insert(11, 15);
     map.insert(11, 16);
     map.insert(11, 17);
@@ -30,32 +30,28 @@ int test_road(Map<RoadObject> & map){
 int test_initials(Map<RoadObject> & map) {
     //test insert
     list<int> a = {1, 2, 3, 4, 5};
-    list<int> b = {6, 7, 8, 9, 10};
-
     map.addStore(10, 15, "TestStore", a);
-    map.addStore(19, 50, "TestStore2", b);
-    list<int> orderProducts = {1, 3, 5, 8};
-    map.processOrder(13, 17, 0, orderProducts);
+
+    a = {6, 7, 8, 9, 10};
+    map.addStore(19, 50, "TestStore2", a);
+
+    a = {6, 7, 8, 9, 10};
+    map.addStore(2, 47, "TestStore3", a);
 }
-
-
-
-
 
 int main() {
     Map<RoadObject> map = Map<RoadObject>(20,50);
-    test_road(map);
+//
+
     test_initials(map);
+    test_road(map);
+
+
+    list<int> orderProducts = {1, 3, 5, 8};
+    map.processOrder(13, 17, 0, orderProducts);
 
     int i =0 ;
-    while (i<100){
-        cout << "TICK: " << i << endl;
-        map.nextTick(i++);
-        cout << map.serialize() << endl;
-        sleep(3);
-    }
 
-//    int i;
 //    using my_traits_t2 = restinio::traits_t<
 //            restinio::asio_timer_manager_t,
 //            restinio::single_threaded_ostream_logger_t,
@@ -69,7 +65,7 @@ int main() {
                         map.nextTick(i++);
                         if (i % 10 == 0){
                             list<int> orderProducts = {1, 3, 5, 8};
-                            map.processOrder(13, 17, i+1, orderProducts);
+//                            map.processOrder(13, 17, i+1, orderProducts);
                         }
 
                         string body = map.serialize().dump();

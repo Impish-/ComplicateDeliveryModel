@@ -53,7 +53,7 @@ class Order {
         json order;
 //        if (this == NULL) {return order;}
 
-        order["customer"] = this->customer;
+//        order["customer"] = this->customer;
         order["deliveryTime"] = this->deliveryTime;
         order["status"] = this->finish;
 
