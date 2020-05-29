@@ -18,7 +18,10 @@ template <class T>
 class Order {
     public:
         int deliveryTime;
+        int finishTime;
+
         bool finish = false;
+
         bool expired = false;
         string customer;
         list<OrderPart *> parts;
@@ -58,7 +61,7 @@ class Order {
     //    Store getNearStore(int product_id){};
 
         void checkExpired(int tickCount){
-            expired = (tickCount > deliveryTime);
+            expired = (finish)? finishTime <= deliveryTime: deliveryTime < tickCount;
         };
 
         void checkParts(int tickCount){
@@ -78,7 +81,8 @@ class Order {
             }
             finish = (parts.size() == 0);
             if (finish){
-                expired = (tickCount <= deliveryTime);
+                finishTime = tickCount;
+                checkExpired(tickCount);
             }
         }
 
