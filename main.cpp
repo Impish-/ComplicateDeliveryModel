@@ -1,6 +1,5 @@
 #include "classes/MapPoint.h"
 #include "classes/Map.h"
-#include "models/product.h"
 #include <iostream>
 #include <unistd.h>
 #include <restinio/all.hpp>
@@ -24,7 +23,6 @@ int test_road(Map<RoadObject> & map){
     map.insert(19, 16);
     map.insert(13, 15);
     map.insert(20, 15);
-
 };
 
 int test_initials(Map<RoadObject> & map) {
@@ -65,7 +63,7 @@ int main() {
                         map.nextTick(i++);
                         if (i % 10 == 0){
                             list<int> orderProducts = {1, 3, 5, 8};
-//                            map.processOrder(13, 17, i+1, orderProducts);
+                            map.processOrder(13, 17, i+1, orderProducts);
                         }
 
                         string body = map.serialize().dump();

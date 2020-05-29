@@ -1,1 +1,3 @@
 rm -rf build && mkdir build && cd build && conan install .. --build=missing && cmake .. && cmake --build . --config Release
+ ps ax | grep 'm_delivery' | while read s _; do kill "$s"; done
+/srv/build/bin/m_delivery&
