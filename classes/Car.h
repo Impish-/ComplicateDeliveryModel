@@ -72,8 +72,9 @@ class Car {
                     try{
                         current = items[road.XCoord] [road.YCoord].incomingCar(*this);
                         items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
-                    } catch (RoadPointIsFull& ex) {
+                    } catch (RoadPointIsFull& ex){
                         cout << "\t\t"<< _str() <<" CANT MOVIE, WAITING" <<endl;
+                        return;
                     }
                     break;
                 }
