@@ -19,6 +19,15 @@ public:
     }
 };
 
+class PastIntervalException : public CException
+{
+public:
+    void virtual PrintMessage()
+    {
+        cout << "delivery time in past"; // **
+    }
+};
+
 
 template <class T_RoadObjectType>
 class Map {
@@ -28,6 +37,7 @@ class Map {
         map<int, map<int, T_RoadObjectType >> items;
 //        map<int, map<int, T_RoadObjectType >>::iterator = items.begin();
         allocator<T_RoadObjectType> typeAllocator;
+        int currentTick =0;
     public:
         Map(int m, int n){
             M=m;
@@ -188,10 +198,12 @@ class Map {
             T_RoadObjectType orderPoint = getElement(x, y);
             list<pair<list<int>, list<RoadObject>>> deals;
             list<pair<Store*, int>> candidates;
+            int deliveryAvailableInterval = deliveryTime - currentTick;
+            if (deliveryAvailableInterval <= 0){
+                throw PastIntervalException();
+            };
             getDeliveryCandidates(productIds, orderPoint, candidates);
-
             list<int> inCandidate;
-
             for (auto x : candidates){
                list<int> orderHere;
                orderHere.clear();
@@ -223,6 +235,7 @@ class Map {
         }
 
         void nextTick(int tickCount){
+           currentTick ++;
             for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
