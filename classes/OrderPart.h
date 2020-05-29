@@ -32,6 +32,7 @@ public:
     };
 
     void setDeliveredStatus(bool newStatus){delivered=newStatus;};
+    bool getDeliveredStatus() const {return delivered;};
 
     bool operator == (const OrderPart other){
         return this->path == other.path;

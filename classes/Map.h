@@ -218,7 +218,7 @@ class Map {
                deals.push_back(storePair);
 
             }
-            orderPoint.addOrder(deliveryTime, deals, items);
+            orderPoint.addOrder(productIds, deliveryTime, deals, items);
             items[x][y] = orderPoint;
         }
 

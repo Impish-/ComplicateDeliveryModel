@@ -21,12 +21,15 @@ class Order {
         bool finish = false;
         string customer;
         list<OrderPart *> parts;
+        list<int> waitingProducts;
+        list<int> deliveredProducts;
 
         Order() = default;
-        Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair<list<int>,
+        Order(list<int>productIds, int ideliveryTime, pair<int,int> orderToCoords, list<pair<list<int>,
                 list<T>>> ideals,  map<int, map<int, T >>& items){
             this->customer = "Неведомый";
             this->deliveryTime = ideliveryTime;
+            this->waitingProducts = productIds;
 
             for (pair<list<int>, list<T>> deal : ideals){
                 if (deal.second.size() == 0) { continue;}
@@ -59,13 +62,28 @@ class Order {
 
         };
 
+        void nextTick(int tickCount, map<int, map<int, T >>& items){
+            OrderPart * removePart;
+            for (OrderPart * part : parts){
+                if (!part->getDeliveredStatus()){
+                    continue;
+                }
+                deliveredProducts.insert(
+                        waitingProducts.end(), part->products.begin(), part->products.end()
+                        );
+                removePart = part;
+            }
+            parts.remove(removePart);
+            finish = (parts.size() == 0);
+        }
+
     json serialize(){
         json order;
 //        if (this == NULL) {return order;}
 
 //        order["customer"] = this->customer;
-        order["deliveryTime"] = this->deliveryTime;
-        order["status"] = this->finish;
+        order["deliveryTime"] = deliveryTime;
+        order["status"] = finish;
 
         return order;
     }

@@ -25,7 +25,7 @@ public:
     using MapPoint::addStore;
     using MapPoint::MapPoint;
     using MapPoint::setCoords;
-    Order<RoadObject> * activeOrder;
+    Order<RoadObject> * activeOrder = NULL;
 
     RoadObject() {XCoord=-1; YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y; activeOrder = NULL;};
@@ -36,11 +36,11 @@ public:
     };
 
 
-    void addOrder(  int deliveryTick,
+    void addOrder(list<int> productIds,  int deliveryTick,
                     list<pair<list<int>,
                     list<RoadObject>>> deals,
                     map<int, map<int, RoadObject >>& items){
-        activeOrder = new Order<RoadObject>(deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
+        activeOrder = new Order<RoadObject>(productIds, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
 
     void closeOrder(){
@@ -148,6 +148,10 @@ public:
             };
             car.nextTick(tickCount, items, *this);
         };
+
+        if (activeOrder !=NULL){
+            activeOrder->nextTick(tickCount, items);
+        }
     };
     json serialize(){
         json point;
@@ -156,7 +160,9 @@ public:
 //        cout << "\nSERIALIZE X:" << XCoord << ", Y:" << YCoord <<endl;
 //
 //        cout << "ORDERS";
-        if (this->activeOrder != NULL) (point["order"] = this->activeOrder->serialize());
+        if (this->activeOrder != NULL) (
+                point["order"] = this->activeOrder->serialize()
+        );
 //        cout << "- done"<<endl;
 //        cout << "STORE"  ;
         if (this->store != NULL){point["store"] = this->store->serialize();}
