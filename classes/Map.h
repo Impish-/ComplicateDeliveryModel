@@ -10,8 +10,7 @@
 using namespace std;
 using nlohmann::json;
 
-class NoRoadException : public CException
-{
+class NoRoadException : public exception{
 public:
     void virtual PrintMessage()
     {
@@ -19,8 +18,7 @@ public:
     }
 };
 
-class PastIntervalException : public CException
-{
+class PastIntervalException : public exception{
 public:
     void virtual PrintMessage()
     {
@@ -28,6 +26,21 @@ public:
     }
 };
 
+
+class CantDeliveryException : public exception{
+public:
+    int aTick = -1;
+    CantDeliveryException() = default;
+    CantDeliveryException(int avalableTick){aTick = avalableTick;};
+    const int get_avail() const { return aTick; }
+    const string PrintMessage() const {
+        if (aTick == -1){
+            return "cant delivery current list of products (one or more products does not exist now)"; // **
+        }
+        return "cant delivery current list of products in available time, available interval:"
+        + to_string( aTick); // **
+    }
+};
 
 template <class T_RoadObjectType>
 class Map {
@@ -174,13 +187,26 @@ class Map {
             return pathCoords;
         }
 
-       void getDeliveryCandidates(list<int> & productIds,
+       bool getDeliveryCandidates(list<int> & productIds,
                 RoadObject& orderTo,
-                list<pair<Store*, int>> & candidates){
+                list<pair<Store*, int>> & candidates, int availTime){
+
+           list<int> canDeliveryProducts;
            for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL) { continue;};
                     if (Y.second.store->checkProduct(productIds).size() == 0){ continue;}
+                    if(getPathList(Y.second, orderTo).size() > availTime) { continue;}
+                    list<int> orderHere;
+                    orderHere.clear();
+                    for (auto productId: Y.second.store->checkProduct(productIds)){
+                        list<int>::iterator it;
+                        it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
+                        if (it == canDeliveryProducts.end()){
+                            orderHere.push_back(productId);
+                            canDeliveryProducts.push_back(productId);
+                        }
+                    }
                     pair<Store*, int> path_(
                             Y.second.store, getPathList(Y.second, orderTo).size()
                     );
@@ -192,6 +218,7 @@ class Map {
                                     const pair<Store*, int> &b ){
                                 return a.second < b.second;
                           });
+           return (canDeliveryProducts.size() == productIds.size());
         }
 
         void processOrder(int x, int y, int deliveryTime, list<int>productIds){
@@ -202,26 +229,32 @@ class Map {
             if (deliveryAvailableInterval <= 0){
                 throw PastIntervalException();
             };
-            getDeliveryCandidates(productIds, orderPoint, candidates);
-            list<int> inCandidate;
+
+            bool availDelivery = getDeliveryCandidates(productIds, orderPoint, candidates, deliveryAvailableInterval);
+            if (!availDelivery){
+                bool _subAvailDelivery = false;
+                int deliveryAvailableInterval_ = deliveryAvailableInterval;
+                while (!_subAvailDelivery){
+                    candidates.clear();
+                    bool availDelivery_ = getDeliveryCandidates(
+                            productIds,
+                            orderPoint,
+                            candidates,
+                            deliveryAvailableInterval_++
+                            );
+                    if (availDelivery_){
+                        throw CantDeliveryException(deliveryAvailableInterval_);
+                    }
+                    if (deliveryAvailableInterval_ > max(M,N)){
+                        throw CantDeliveryException();
+                    }
+                }
+            }
+
+            list<int> canDeliveryProducts;
             for (auto x : candidates){
-               list<int> orderHere;
-               orderHere.clear();
-
-               for (auto productId: x.first->checkProduct(productIds)){
-                   list<int>::iterator it;
-                   it = std::find(inCandidate.begin(), inCandidate.end(), productId);
-                   if (it == inCandidate.end()){
-                       orderHere.push_back(productId);
-                       inCandidate.push_back(productId);
-                   }
-               }
-
-               if (orderHere.size() == 0){
-                   continue;
-               }
                pair<list<int>, list<RoadObject>> storePair(
-                            inCandidate,
+                            canDeliveryProducts,
                             getPathList(
                                     getElement(x.first->coords.first, x.first->coords.second),
                                     orderPoint
@@ -252,7 +285,6 @@ class Map {
                     };
                     Y.second.nextTick(tickCount, items);
                 };
-
             }
         };
         json serialize(){

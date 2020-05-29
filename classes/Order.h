@@ -49,7 +49,7 @@ class Order {
                         store->coords,
                         orderToCoords
                 );
-                store->orderToSchedule(ideliveryTime, part_);
+                store->orderToSchedule(ideliveryTime - pathCoords.size(), part_);
                 parts.push_back(part_);
 //                items[store->coords.first][store->coords.second].store =
             }
@@ -62,7 +62,7 @@ class Order {
         };
 
         void checkParts(int tickCount){
-            OrderPart * removePart;
+            list<OrderPart * > removePart;
             for (OrderPart * part : parts){
                 if (!part->getDeliveredStatus()){
                     continue;
@@ -70,10 +70,12 @@ class Order {
                 for (auto pId: part->products){
                     deliveredProducts.push_back(pId);
                 }
-                removePart = part;
+                removePart.push_back(part);
             }
-            parts.remove(removePart);
-            delete removePart;
+            for (OrderPart * toRemove: removePart){
+                parts.remove(toRemove);
+                delete toRemove;
+            }
             finish = (parts.size() == 0);
             if (finish){
                 expired = (tickCount <= deliveryTime);

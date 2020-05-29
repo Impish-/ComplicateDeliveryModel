@@ -187,12 +187,12 @@
           console.log(point.order);
           if(point.order.finished){// доставлено
             (point.order.expired)?
-                    ct.css("background", "#5e5d02"): // c опозданием
-                    ct.css("background", "#e7cc7f"); // вовремя
+                    ct.css("background", "#871d8b"): // c опозданием
+                    ct.css("background", "#5fa716"); // вовремя
           }else {            // не доставлено
             (point.order.expired)?
-              ct.css("background", "#e207ea"): // опаздывает
-              ct.css("background", "#16d24b"); // не опаздывает
+              ct.css("background", "#ec8cef"): // опаздывает
+              ct.css("background", "#57f383"); // не опаздывает
           }
         }
         if (point.store){
