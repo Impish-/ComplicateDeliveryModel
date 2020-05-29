@@ -6,6 +6,27 @@
 
 using router_t = restinio::router::express_router_t<>;
 
+void test_bad_order1(Map<RoadObject> & map){
+    // test unreal delivery time
+    try {
+        list<int> orderProducts = {1, 3, 5, 8};
+        map.processOrder(13, 17, 10, orderProducts);
+    } catch (CantDeliveryException& ex) {
+        cout << ex.PrintMessage();
+        throw ex;
+    }
+}
+void test_bad_order2(Map<RoadObject> & map){
+    // test bad product
+    try {
+        list<int> orderProducts = {1, 3, 5, 8, 12};
+        map.processOrder(13, 17, 10, orderProducts);
+    } catch (CantDeliveryException& ex) {
+        cout << ex.PrintMessage();
+        throw ex;
+    }
+}
+
 int test_road(Map<RoadObject> & map){
 //    map.insert(10, 15);
     map.insert(11, 17);
@@ -31,14 +52,11 @@ int test_initials(Map<RoadObject> & map) {
 
 int main() {
     Map<RoadObject> map = Map<RoadObject>(20,50);
-//
-
     test_initials(map);
     test_road(map);
 
-
     list<int> orderProducts = {1, 3, 5, 8};
-    map.processOrder(13, 17, 10, orderProducts);
+    map.processOrder(13, 17, 18, orderProducts);
 
     int i =0 ;
 
