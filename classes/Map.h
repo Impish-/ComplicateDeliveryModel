@@ -194,6 +194,7 @@ class Map {
 
             for (auto x : candidates){
                list<int> orderHere;
+               orderHere.clear();
 
                for (auto productId: x.first->checkProduct(productIds)){
                    list<int>::iterator it;
@@ -225,13 +226,13 @@ class Map {
             for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
-                    list<OrderPart> orders = Y.second.store->nextTick(tickCount);
-                    for (OrderPart orderPartToDelivery : orders){
+                    list<OrderPart*> orders = Y.second.store->nextTick(tickCount);
+                    for (OrderPart * orderPartToDelivery : orders){
                         list<RoadObject> convertedPath;
-                        for (auto pathPair: orderPartToDelivery.path){
+                        for (pair<int, int> pathPair: orderPartToDelivery->path){
                             convertedPath.push_back(items[pathPair.first][pathPair.second]);
                         };
-                        pair<int, int> fromChords = orderPartToDelivery.path.front();
+                        pair<int, int> fromChords = orderPartToDelivery->path.front();
                         RoadObject from = items[fromChords.first][fromChords.second];
                         items[fromChords.first][fromChords.second] = from.startCar(convertedPath,
                                 orderPartToDelivery, *Y.second.store);

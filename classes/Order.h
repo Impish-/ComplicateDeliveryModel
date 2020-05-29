@@ -20,6 +20,7 @@ class Order {
         int deliveryTime;
         bool finish = false;
         string customer;
+        list<OrderPart *> parts;
 
         Order() = default;
         Order(int ideliveryTime, pair<int,int> orderToCoords, list<pair<list<int>,
@@ -37,8 +38,15 @@ class Order {
                     }
                     pathCoords.push_back(pair<int, int> (x.XCoord, x.YCoord));
                 }
-                OrderPart orderPart = OrderPart(deal.first, pathCoords, store->coords, orderToCoords);
-                store->orderToSchedule(ideliveryTime, orderPart);
+                OrderPart * part_ = NULL;
+                part_ =  new OrderPart(
+                        parts.size(),
+                        deal.first, pathCoords,
+                        store->coords,
+                        orderToCoords
+                );
+                store->orderToSchedule(ideliveryTime, part_);
+                parts.push_back(part_);
 //                items[store->coords.first][store->coords.second].store =
             }
 
@@ -47,7 +55,9 @@ class Order {
 
         void genParts(){};
         void status(){}; //Процент исполеннных частей.
-        void setStoresList(){};
+        void orderPartDelivered(){
+
+        };
 
     json serialize(){
         json order;

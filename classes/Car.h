@@ -19,7 +19,7 @@ class Car {
     private:
         list<T> path;
         Store store;
-        OrderPart orderPart;
+        OrderPart * orderPart;
     public:
         string name;
         bool arrived = false;
@@ -27,12 +27,16 @@ class Car {
 
         T current;
         T wayTo;
+
+        int getPartId(){
+            return orderPart->ID;
+        }
         bool operator == (const Car other){
             return this->name == other.name;
         };
 
         Car(){};
-        Car(list<T> & carPath, OrderPart & orderPart, Store & store){
+        Car(list<T> & carPath, OrderPart * orderPart, Store & store){
             this->path = carPath;
             this->current = path.front();
             this->wayTo = path.back();

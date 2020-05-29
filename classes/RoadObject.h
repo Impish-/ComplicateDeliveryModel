@@ -25,6 +25,7 @@ public:
     using MapPoint::addStore;
     using MapPoint::MapPoint;
     using MapPoint::setCoords;
+    Order<RoadObject> * activeOrder;
 
     RoadObject() {XCoord=-1; YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y; activeOrder = NULL;};
@@ -34,7 +35,7 @@ public:
         return this->XCoord == other.XCoord && this->YCoord == other.YCoord;
     };
 
-    Order<RoadObject> * activeOrder;
+
     void addOrder(  int deliveryTick,
                     list<pair<list<int>,
                     list<RoadObject>>> deals,
@@ -112,7 +113,7 @@ public:
         return *this;
     }
 
-    RoadObject startCar(list<RoadObject> carPath, OrderPart & orderPart, Store & store){
+    RoadObject startCar(list<RoadObject> carPath, OrderPart * orderPart, Store & store){
         Car<RoadObject> newCar = Car<RoadObject>(carPath, orderPart, store);
         newCar.name = rnd();
         return incomingCar(newCar, true);

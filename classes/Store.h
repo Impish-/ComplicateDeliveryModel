@@ -16,7 +16,7 @@ using namespace std;
 class Store{
     public:
         string name;
-        list<pair<int, OrderPart>> schedule;
+        list<pair<int, OrderPart *>> schedule;
         list<OrderPart> deliveryNotify;
         list<int> productIds;
         pair<int, int> coords;
@@ -28,20 +28,20 @@ class Store{
             coords = icoords;
         };
 
-        Store orderToSchedule(int ideliveryTime, OrderPart orderPart){
-            schedule.push_back(pair<int, OrderPart> (ideliveryTime, orderPart));
+        Store orderToSchedule(int ideliveryTime, OrderPart * orderPart){
+            schedule.push_back(pair<int, OrderPart*> (ideliveryTime, orderPart));
             return *this;
         };
 
-        void delivered(OrderPart & part){
-            list<pair<int, OrderPart>>::iterator it = schedule.begin();
+        void delivered(OrderPart * part){
+            list<pair<int, OrderPart *>>::iterator it = schedule.begin();
             while (it != schedule.end()) {
                 if ((*it).second == part) {
                     it = schedule.erase(it);
                 } else
                     it++;
             }
-            part.setDeliveredStatus(true);
+            part->setDeliveredStatus(true);
         };
 
         bool checkSingleProductAvailable(int productID){
@@ -59,11 +59,11 @@ class Store{
             return result;
         };
 
-    list<OrderPart> nextTick(int tickCount){
-        list<OrderPart> ordersToDelivery;
+    list<OrderPart *> nextTick(int tickCount){
+        list<OrderPart *> ordersToDelivery;
         for ( auto part : schedule ){
             if (part.first == tickCount){
-                part.second.deliveryFrom = coords;
+                part.second->deliveryFrom = coords;
                 ordersToDelivery.push_back(part.second);
                 cout << "TIME TO DELIVERY IT" << endl;
             }
@@ -82,7 +82,10 @@ class Store{
         for (auto x : this->schedule){
             json schedule;
             schedule["time"] = x.first;
-            schedule["coords"] = json ::array({x.second.deliveryTo.first, x.second.deliveryTo.second});
+            schedule["coords"] = json ::array({
+                x.second->deliveryTo.first,
+                x.second->deliveryTo.second
+            });
             store["schedule"] = schedule;
         };
         return store;

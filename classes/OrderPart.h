@@ -15,14 +15,16 @@ private:
 //        MapPoint toPoint;
     bool delivered = false;
 public:
+    int ID;
     list <pair<int, int>> path;
     list<int> products;
     pair<int, int> deliveryTo;
     pair<int, int> deliveryFrom;
 
     OrderPart() = default;
-    OrderPart(list<int> iproducts, list <pair<int, int>> ipath, pair<int, int> ideliveryFrom,
+    OrderPart(int fromOrderID, list<int> iproducts, list <pair<int, int>> ipath, pair<int, int> ideliveryFrom,
             pair<int, int> ideliveryTo){
+        ID=fromOrderID;
         products = iproducts;
         path = ipath;
         deliveryFrom = pair<int, int> (ideliveryFrom.first, ideliveryFrom.second);
