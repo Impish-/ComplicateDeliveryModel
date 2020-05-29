@@ -122,21 +122,33 @@ class Map {
            return getPathList(from, to, a);
        }
 
-       bool checkNeighboardPoints(T_RoadObjectType curPoint){
-            bool left = !(curPoint.XCoord -1 > 0) & elementExist(curPoint.XCoord -1, curPoint.YCoord);
-            bool right = !(curPoint.XCoord +1 <= N) & elementExist(curPoint.XCoord +1, curPoint.YCoord);
-            bool top = !(curPoint.YCoord -1 > 0) & elementExist(curPoint.XCoord, curPoint.YCoord -1);
-            bool bottom = !(curPoint.XCoord +1 <= M) & elementExist(curPoint.XCoord, curPoint.YCoord +1);
+
+
+       bool checkNeighboardPoints(int x, int y){
+            bool left = !(x -1 > 0) & elementExist(x -1, y);
+            bool right = !(x +1 <= N) & elementExist(x +1, y);
+            bool top = !(y -1 > 0) & elementExist(x, y -1);
+            bool bottom = !(y +1 <= M) & elementExist(x, y +1);
             bool result = left + right + top + bottom;
             return result;
         }
 
        void buildRoad(int x, int y, list<pair<int, int>>&road){
+
             bool ox = (M/2) > x;
             bool oy = (N/2) > y;
 
             float  rx = abs(M/2 - x);
             float  ry = abs(N/2 - y);
+           if (x==8 & y == 25){
+
+           }
+            bool nb = checkNeighboardPoints(x,y);
+
+            if (nb){
+               // пришли крч
+                rx = 0; ry = 0;
+            }
 
             if(rx == 0 & ry == 0){
                 insert(x, y);
@@ -166,14 +178,15 @@ class Map {
             T_RoadObjectType newStorePoint = getElement(x, y);
             if (newStorePoint.XCoord == -1 & newStorePoint.YCoord == -1){
 //                throw NoRoadException();
-                    newStorePoint.setCoords(x, y);
 
-                    bool haveNeibprds = checkNeighboardPoints(newStorePoint);
+
+                    bool haveNeibprds = checkNeighboardPoints(x,y);
                     if (!haveNeibprds){
                         list<pair<int, int>> road;
                         buildRoad(x,y, road);
                     };
             }
+           newStorePoint.setCoords(x, y);
             newStorePoint.addStore(name, productIds);
             items[x][y] = newStorePoint;
 
@@ -187,18 +200,36 @@ class Map {
             return pathCoords;
         }
 
+    int pathCalcDeliveryTime(list<T_RoadObjectType> path){
+        list<int> crossroads; // int - кол-во джорог
+
+        for (auto path_: path){
+
+        }
+
+
+        return path.size();
+    }
+
        bool getDeliveryCandidates(list<int> & productIds,
                 RoadObject& orderTo,
                 list<pair<Store*, int>> & candidates, int availTime){
 
            list<int> canDeliveryProducts;
+           canDeliveryProducts.clear();
            for ( auto X : items ){
                 for ( auto Y : X.second ){
+                    list<RoadObject> path = getPathList(Y.second, orderTo);
+                    int canditateDeliveryTime = pathCalcDeliveryTime(path);
+                    if(canditateDeliveryTime > availTime) { continue;}
+
                     if (Y.second.store == NULL) { continue;};
                     if (Y.second.store->checkProduct(productIds).size() == 0){ continue;}
-                    if(getPathList(Y.second, orderTo).size() > availTime) { continue;}
+
+                    if(pathCalcDeliveryTime(getPathList(Y.second, orderTo)) > availTime) { continue;}
                     list<int> orderHere;
                     orderHere.clear();
+
                     for (auto productId: Y.second.store->checkProduct(productIds)){
                         list<int>::iterator it;
                         it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
@@ -208,7 +239,7 @@ class Map {
                         }
                     }
                     pair<Store*, int> path_(
-                            Y.second.store, getPathList(Y.second, orderTo).size()
+                            Y.second.store, pathCalcDeliveryTime(getPathList(Y.second, orderTo))
                     );
                     candidates.push_back(path_);
                 };
@@ -245,23 +276,37 @@ class Map {
                     if (availDelivery_){
                         throw CantDeliveryException(deliveryAvailableInterval_);
                     }
-                    if (deliveryAvailableInterval_ > max(M,N)){
+                    if (deliveryAvailableInterval_ > M*N){
                         throw CantDeliveryException();
                     }
                 }
             }
 
             list<int> canDeliveryProducts;
-            for (auto x : candidates){
-               pair<list<int>, list<RoadObject>> storePair(
+            for (auto deliveryCandidate : candidates){
+                list<int> orderHere;
+                orderHere.clear();
+
+                for (auto productId: deliveryCandidate.first->checkProduct(productIds)){
+                    list<int>::iterator it;
+                    it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
+                    if (it == canDeliveryProducts.end()){
+                        orderHere.push_back(productId);
+                        canDeliveryProducts.push_back(productId);
+                    }
+                }
+
+                if (orderHere.size() == 0){
+                    continue;
+                }
+                pair<list<int>, list<RoadObject>> storePair(
                             canDeliveryProducts,
                             getPathList(
-                                    getElement(x.first->coords.first, x.first->coords.second),
+                                    getElement(deliveryCandidate.first->coords.first, deliveryCandidate.first->coords.second),
                                     orderPoint
                             )
                      );
                deals.push_back(storePair);
-
             }
             orderPoint.addOrder(productIds, deliveryTime, deals, items);
             items[x][y] = orderPoint;

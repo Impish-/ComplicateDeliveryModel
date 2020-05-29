@@ -11,6 +11,7 @@
 #include <map>
 #include "Store.h"
 #include "exceptions.h"
+#include <string>
 
 
 using namespace std;
@@ -51,7 +52,11 @@ class Car {
         };
 
         string _str(){
-            auto s = "<Car " + name + ">";
+            string returnstring = "";
+            for (int i: orderPart->products){
+                returnstring += to_string(i)+ ", ";
+            };
+            auto s = "<Car " + name + " products:" + returnstring +">";
             return s;
         };
 
