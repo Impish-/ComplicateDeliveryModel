@@ -203,12 +203,22 @@ class Map {
     int pathCalcDeliveryTime(list<T_RoadObjectType> path){
         list<int> crossroads; // int - кол-во джорог
 
+        pair<int, int> from; // направление
         for (auto path_: path){
+            bool _x = elementExist(path_.XCoord -1, path_.YCoord);
+            bool x_ = elementExist(path_.XCoord +1, path_.YCoord);
+            bool _y = elementExist(path_.XCoord, path_.YCoord -1);
+            bool y_ = elementExist(path_.XCoord, path_.YCoord +1);
 
+            from = pair<int, int>(path_.XCoord,path_.YCoord);
+            int result = int(_x) + int(x_) + int(_y) + int(y_);
+            if (result == 2) { continue;}
+            crossroads.push_back((result > 3)?2:1);
         }
 
+        int sum = std::accumulate(crossroads.begin(), crossroads.end(), 0);;
 
-        return path.size();
+        return path.size() + sum;
     }
 
        bool getDeliveryCandidates(list<int> & productIds,
@@ -287,6 +297,7 @@ class Map {
                 list<int> orderHere;
                 orderHere.clear();
 
+                // можно зарефакторить
                 for (auto productId: deliveryCandidate.first->checkProduct(productIds)){
                     list<int>::iterator it;
                     it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
@@ -295,6 +306,7 @@ class Map {
                         canDeliveryProducts.push_back(productId);
                     }
                 }
+                // /можно зарефакторить
 
                 if (orderHere.size() == 0){
                     continue;
