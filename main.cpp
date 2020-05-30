@@ -150,11 +150,12 @@ auto make_request_handler(Map<RoadObject> * map){
                          string body = "OK";
                          std::map<string, int> orderProducts;
 
-                         for (auto x : j2["products"]){
-                             orderProducts[x["name"]] = x["count"].get<int>();
+                         for (json x : j2["products"]){
+                             orderProducts[x["name"].get<string>()] = x["count"].get<int>();
                          }
                          try{
-                             map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
+                             map->processOrder(j2["point"]["x"].get<int>(), j2["point"]["y"].get<int>(),
+                                     j2["deliveryTick"].get<int>(), orderProducts);
                          } catch (CantDeliveryException& ex) {
                              body = "FAIL";
                          }

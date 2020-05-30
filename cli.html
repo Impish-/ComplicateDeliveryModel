@@ -221,7 +221,7 @@
       $('#products').val().forEach(function(d) {
         var row = tr.clone() //creates a row
         row.append(td.clone().text(d)) //fills in the row
-        row.append(td.clone().html('<input type="number" id="'+d+'">')) //fills in the row
+        row.append(td.clone().html('<input type="number" id="'+d.replace(' ', '')+'">')) //fills in the row
         tbody.append(row) //puts row on the tbody
       })
       $('#orderOroductsCount').html(itemsTable.html(tbody));
@@ -242,14 +242,14 @@
         $('#products').val().forEach(function(d) {
           order.products.push({
             name: d,
-            count: parseInt($('#'+d).val())
+            count: parseInt($('#'+d.replace(' ', '')).val())
           })
         })
         console.log(order);
         var oReq = new XMLHttpRequest();
         oReq.open('post', API_URL + '/order', true);
         oReq.send(JSON.stringify(order));
-      })!order.point.x
+      })
     }
 
     $("#submitOrder").click(submitOrder)
