@@ -228,8 +228,10 @@ class Map {
            /// вернет список всеъ <Сторов, кол-во интересующего оборудования>
            /// все Store подходят для доставки в заданный интервал
 
-           map<string, int> canDeliveryProducts;
-           canDeliveryProducts.clear();
+           std::map<string, int> productsRequired = productsToOrder;
+
+//           map<string, int> canDeliveryProducts;
+//           canDeliveryProducts.clear();
            for ( auto X : items ){
                 for ( auto Y : X.second ){
                     int canditateDeliveryTime = pathCalcDeliveryTime(getPathList(Y.second, orderTo));
@@ -239,16 +241,13 @@ class Map {
                     if(canditateDeliveryTime > availTime) { continue;}
                     map<string, int> orderHere;
                     orderHere.clear();
-
                     for (auto productFromStore: Y.second.store->checkProduct(productsToOrder)){
-//                        map<string, int>::iterator it;
-                        auto search = canDeliveryProducts.find(productFromStore.first);
-//                        it = canDeliveryProducts.find(productFromStore);
-                        if (search == canDeliveryProducts.end()){
-                            orderHere[productFromStore.first] = productFromStore.second;
-                            canDeliveryProducts[productFromStore.first] = productFromStore.second;
-                        }
-                    }
+                        auto required = productsRequired[productFromStore.first];
+                        int payHere = (productFromStore.second < required)? productFromStore.second:required;
+                        orderHere[productFromStore.first] = productFromStore.second;
+                        if (required >0)
+                            (productsRequired[productFromStore.first] -= payHere);
+                }
                     auto store_order  = pair<Store*, map<string, int>> (Y.second.store, orderHere);
                     pair<pair<Store*, map<string, int>>, int> path_ (
                             store_order,
@@ -262,12 +261,20 @@ class Map {
                                     const pair<pair<Store*, map<string, int>>, int> &b ){
                                 return a.second < b.second;
                           });
-           return (canDeliveryProducts.size() == productsToOrder.size());
+
+           bool canDelivery = true;
+           for (auto item: productsToOrder){
+               auto search = productsRequired.find(item.first);
+               if (search != productsRequired.end()){
+                   canDelivery *= productsRequired[item.first] == 0;
+               }else{
+                   canDelivery = false;
+                   break;
+               }
+           }
+           return (productsRequired.size() == productsToOrder.size());
         }
 
-        void validationDelivery(){
-
-       }
 
         void processOrder(int x, int y, int deliveryTime, std::map<string, int> productsToOrder){
             T_RoadObjectType orderPoint = getElement(x, y);
@@ -298,29 +305,31 @@ class Map {
                 }
             }
 
-            map<string, int> canDeliveryProducts;
+            map<string, int> fullOrderComplete;
             list<pair<std::map<string, int>, list<T_RoadObjectType> * >> deals;
             for (auto deliveryCandidate : candidates){
-                RoadObject storePoint =
-                        getElement(
-                                deliveryCandidate.first.first->coords.first,
-                                deliveryCandidate.first.first->coords.second
-                                );
                 std::map<string, int> orderHere;
                 orderHere.clear();
 
                 // можно зарефакторить (сщбираем заказ у конкретного Store)
                 for (pair<string, int> product: deliveryCandidate.first.second){
-//                    list<pair<string, int>>::iterator it;
-                    auto search = canDeliveryProducts.find(product.first);
-                    if (search == canDeliveryProducts.end()){
-                        orderHere[product.first] = product.second;
-                        canDeliveryProducts[product.first] = product.second;
-                    }else{
+                    auto need = productsToOrder[product.first] - fullOrderComplete[product.first];
+                    int payHere = (product.second > need)? need: product.second;
+                    if (payHere == 0) { continue;}
+                    fullOrderComplete[product.first] += payHere;
+                    orderHere[product.first] = payHere;
 
-                    }
+//                    auto search = fullOrderComplete.find(product.first);
+//
+//                    if (search == fullOrderComplete.end()){
+//
+//
+//                    }else{
+//
+//                    }
 
                 }
+
                 // /можно зарефакторить
 
                 if (orderHere.size() == 0){
@@ -328,7 +337,10 @@ class Map {
                 }
 
                 auto  pathFromStore = new list<RoadObject>;
-                list<RoadObject> generatedPath = this->getPathList(storePoint, orderPoint, *pathFromStore);
+                list<RoadObject> generatedPath = this->getPathList(getElement(
+                        deliveryCandidate.first.first->coords.first,
+                        deliveryCandidate.first.first->coords.second
+                ), orderPoint, *pathFromStore);
                 pathFromStore->assign(generatedPath.begin(), generatedPath.end());
                 auto orderPathPair = pair<std::map<string, int>, list<T_RoadObjectType> *> (
                         orderHere,

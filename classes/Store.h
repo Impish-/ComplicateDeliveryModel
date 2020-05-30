@@ -54,7 +54,7 @@ class Store{
             list<pair<string, int>> result;
             for (auto product : orderProductIds){
                 if(checkSingleProductAvailable(product.first))
-                    result.push_back(product);
+                    result.push_back(pair<string, int> (product.first, productsAvailable[product.first]));
             }
             return result;
         };

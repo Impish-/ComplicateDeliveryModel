@@ -90,7 +90,7 @@ int test_initials(Map<RoadObject> & map) {
     map.addStore(19, 50, "TestStore2", a);
 
     a = {
-            pair<string, int>("DJ оборудование", 2),
+            pair<string, int>("DJ оборудование", 1),
             pair<string, int>("Дым-машина", 1),
             pair<string, int>("Конфетти-машина", 4),
             pair<string, int>("Радио-микрофон", 2),
@@ -99,6 +99,7 @@ int test_initials(Map<RoadObject> & map) {
     map.addStore(2, 47, "TestStore3", a);
 
     a = {
+            pair<string, int>("DJ оборудование", 1),
             pair<string, int>("Баннер", 5),
             pair<string, int>("Конфетти-машина", 5),
     };
@@ -112,14 +113,20 @@ int main() {
     test_initials(map);
     test_road(map);
 
+//    std::map<string, int> orderProducts = {
+//            pair<string, int>("Экран", 1),
+//            pair<string, int>("Сцена", 1),
+//            pair<string, int>("Баннер", 1),
+//            pair<string, int>("DJ оборудование", 1),
+//            pair<string, int>("Плазма", 1)
+//    };
+
     std::map<string, int> orderProducts = {
-            pair<string, int>("Экран", 1),
-            pair<string, int>("Сцена", 1),
-            pair<string, int>("Баннер", 1),
-            pair<string, int>("DJ оборудование", 1),
-            pair<string, int>("Плазма", 1)
+            pair<string, int>("DJ оборудование", 4),
+            pair<string, int>("Дым-машина", 3),
     };
-    map.processOrder(13, 17, 50, orderProducts);
+
+    map.processOrder(13, 17, 64, orderProducts);
 
     int i =0 ;
 
