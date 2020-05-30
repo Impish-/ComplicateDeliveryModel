@@ -53,8 +53,8 @@ class Car {
 
         string _str(){
             string returnstring = "";
-            for (int i: orderPart->products){
-                returnstring += to_string(i)+ ", ";
+            for (auto i: orderPart->products){
+                returnstring += i.first+ ", ";
             };
             auto s = "<Car " + name + " products:" + returnstring +">";
             return s;

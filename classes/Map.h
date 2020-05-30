@@ -122,8 +122,6 @@ class Map {
            return getPathList(from, to, a);
        }
 
-
-
        bool checkNeighboardPoints(int x, int y){
             bool left = !(x -1 > 0) & elementExist(x -1, y);
             bool right = !(x +1 <= N) & elementExist(x +1, y);
@@ -174,7 +172,7 @@ class Map {
         }
 
 
-       void addStore(int x, int y, string name, list<int>productIds){
+       void addStore(int x, int y, string name, map<string, int> products){
             T_RoadObjectType newStorePoint = getElement(x, y);
             if (newStorePoint.XCoord == -1 & newStorePoint.YCoord == -1){
 //                throw NoRoadException();
@@ -187,7 +185,7 @@ class Map {
                     };
             }
            newStorePoint.setCoords(x, y);
-            newStorePoint.addStore(name, productIds);
+            newStorePoint.addStore(name, products);
             items[x][y] = newStorePoint;
 
          };
@@ -224,64 +222,66 @@ class Map {
         return path.size() + pathCalcBarriers(path);
     }
 
-       bool getDeliveryCandidates(list<int> & productIds,
+       bool getDeliveryCandidates(std::map<string, int> & productsToOrder,
                 RoadObject& orderTo,
-                list<pair<Store*, int>> & candidates, int availTime){
+                list<pair<pair<Store*, map<string, int>>, int>> & candidates, int availTime){
+           /// вернет список всеъ <Сторов, кол-во интересующего оборудования>
+           /// все Store подходят для доставки в заданный интервал
 
-           list<int> canDeliveryProducts;
+           map<string, int> canDeliveryProducts;
            canDeliveryProducts.clear();
            for ( auto X : items ){
                 for ( auto Y : X.second ){
                     list<RoadObject> path = getPathList(Y.second, orderTo);
                     int canditateDeliveryTime = pathCalcDeliveryTime(path);
                     if(canditateDeliveryTime > availTime) { continue;}
-
                     if (Y.second.store == NULL) { continue;};
-                    if (Y.second.store->checkProduct(productIds).size() == 0){ continue;}
-
-                    if(pathCalcDeliveryTime(getPathList(Y.second, orderTo)) > availTime) { continue;}
-                    list<int> orderHere;
+                    if (Y.second.store->checkProduct(productsToOrder).size() == 0){ continue;}
+                    if(canditateDeliveryTime > availTime) { continue;}
+                    map<string, int> orderHere;
                     orderHere.clear();
 
-                    for (auto productId: Y.second.store->checkProduct(productIds)){
-                        list<int>::iterator it;
-                        it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
-                        if (it == canDeliveryProducts.end()){
-                            orderHere.push_back(productId);
-                            canDeliveryProducts.push_back(productId);
+                    for (auto productFromStore: Y.second.store->checkProduct(productsToOrder)){
+//                        map<string, int>::iterator it;
+                        auto search = canDeliveryProducts.find(productFromStore.first);
+//                        it = canDeliveryProducts.find(productFromStore);
+                        if (search == canDeliveryProducts.end()){
+                            orderHere[productFromStore.first] = productFromStore.second;
+                            canDeliveryProducts[productFromStore.first] = productFromStore.second;
                         }
                     }
-                    pair<Store*, int> path_(
-                            Y.second.store, pathCalcDeliveryTime(getPathList(Y.second, orderTo))
+                    auto store_order  = pair<Store*, map<string, int>> (Y.second.store, orderHere);
+                    pair<pair<Store*, map<string, int>>, int> path_ (
+                            store_order,
+                            canditateDeliveryTime
                     );
                     candidates.push_back(path_);
                 };
            }
 
-           candidates.sort([](const pair<Store*, int> &a,
-                                    const pair<Store*, int> &b ){
+           candidates.sort([](const pair<pair<Store*, map<string, int>>, int> &a,
+                                    const pair<pair<Store*, map<string, int>>, int> &b ){
                                 return a.second < b.second;
                           });
-           return (canDeliveryProducts.size() == productIds.size());
+           return (canDeliveryProducts.size() == productsToOrder.size());
         }
 
-        void processOrder(int x, int y, int deliveryTime, list<int>productIds){
+        void processOrder(int x, int y, int deliveryTime, std::map<string, int> productsToOrder){
             T_RoadObjectType orderPoint = getElement(x, y);
-            list<pair<list<int>, list<RoadObject>>> deals;
-            list<pair<Store*, int>> candidates;
+            list<pair<pair<Store*, map<string, int>>, int>> candidates;
+
             int deliveryAvailableInterval = deliveryTime - currentTick;
             if (deliveryAvailableInterval <= 0){
                 throw PastIntervalException();
             };
-
-            bool availDelivery = getDeliveryCandidates(productIds, orderPoint, candidates, deliveryAvailableInterval);
+            bool availDelivery = getDeliveryCandidates(productsToOrder, orderPoint, candidates, deliveryAvailableInterval);
             if (!availDelivery){
                 bool _subAvailDelivery = false;
                 int deliveryAvailableInterval_ = deliveryAvailableInterval;
                 while (!_subAvailDelivery){
                     candidates.clear();
                     bool availDelivery_ = getDeliveryCandidates(
-                            productIds,
+                            productsToOrder,
                             orderPoint,
                             candidates,
                             deliveryAvailableInterval_++
@@ -295,36 +295,60 @@ class Map {
                 }
             }
 
-            list<int> canDeliveryProducts;
-            for (auto deliveryCandidate : candidates){
-                list<int> orderHere;
-                orderHere.clear();
+            map<string, int> canDeliveryProducts;
+            auto * dealsP1 = new list<
+                    pair<std::map<string, int>, T_RoadObjectType >
+            >;
 
-                // можно зарефакторить
-                for (auto productId: deliveryCandidate.first->checkProduct(productIds)){
-                    list<int>::iterator it;
-                    it = std::find(canDeliveryProducts.begin(), canDeliveryProducts.end(), productId);
-                    if (it == canDeliveryProducts.end()){
-                        orderHere.push_back(productId);
-                        canDeliveryProducts.push_back(productId);
+            for (auto deliveryCandidate : candidates){
+                std::map<string, int> orderHere;
+                orderHere.clear();
+                RoadObject storePoint =
+                        getElement(
+                                deliveryCandidate.first.first->coords.first,
+                                deliveryCandidate.first.first->coords.second
+                                );
+
+                // можно зарефакторить (сщбираем заказ у конкретного Store)
+                for (pair<string, int> product: deliveryCandidate.first.second){
+//                    list<pair<string, int>>::iterator it;
+                    auto search = canDeliveryProducts.find(product.first);
+                    if (search == canDeliveryProducts.end()){
+                        orderHere[product.first] = product.second;
+                        canDeliveryProducts[product.first] = product.second;
+                    }else{
+
                     }
+
                 }
                 // /можно зарефакторить
-
                 if (orderHere.size() == 0){
                     continue;
                 }
-                pair<list<int>, list<RoadObject>> storePair(
-                            orderHere,
-                            getPathList(
-                                    getElement(deliveryCandidate.first->coords.first, deliveryCandidate.first->coords.second),
-                                    orderPoint
-                            )
-                     );
-               deals.push_back(storePair);
+
+
+               dealsP1->push_back( pair<std::map<string, int>, T_RoadObjectType> (
+                        orderHere,
+                        storePoint
+                ));
             }
-            orderPoint.addOrder(productIds, deliveryTime, deals, items);
-            items[x][y] = orderPoint;
+
+            list<
+                    pair<
+                            std::map<string, int>,
+                            list<T_RoadObjectType>
+                    >
+            > dealsP2;
+
+
+
+            for (auto d: *dealsP1){
+                list<RoadObject> path__ = getPathList(d.second, orderPoint);
+
+            }
+
+//            orderPoint.addOrder(productsToOrder, deliveryTime, dealsP2, items);
+//            items[x][y] = orderPoint;
         }
 
         void nextTick(int tickCount){

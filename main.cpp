@@ -3,13 +3,20 @@
 #include <iostream>
 #include <unistd.h>
 #include <restinio/all.hpp>
+#include <map>
+#include <string>
 
 using router_t = restinio::router::express_router_t<>;
 
 void test_bad_order1(Map<RoadObject> & map){
     // test unreal delivery time
     try {
-        list<int> orderProducts = {1, 3, 5, 8};
+        std::map<string, int> orderProducts = {
+                pair<string, int>("Экран", 2),
+               pair<string, int>("Акустическая система", 2),
+               pair<string, int>("Световое оформление", 2),
+               pair<string, int>("Дым-машина", 2),
+        };
         map.processOrder(13, 17, 10, orderProducts);
     } catch (CantDeliveryException& ex) {
         cout << ex.PrintMessage();
@@ -19,7 +26,12 @@ void test_bad_order1(Map<RoadObject> & map){
 void test_bad_order2(Map<RoadObject> & map){
     // test bad product
     try {
-        list<int> orderProducts = {1, 3, 5, 8, 12};
+        std::map<string, int> orderProducts = {pair<string, int>("Экран", 2),
+                pair<string, int>("Акустическая система", 2),
+                pair<string, int>("Световое оформление", 2),
+                pair<string, int>("Дым-машина", 2),
+                pair<string, int>("Неведомое совершенно", 2),
+        };
         map.processOrder(13, 17, 10, orderProducts);
     } catch (CantDeliveryException& ex) {
         cout << ex.PrintMessage();
@@ -35,28 +47,79 @@ int test_road(Map<RoadObject> & map){
     map.insert(13, 17);
 };
 
+std::map<string, int> getDefaultProducts(){
+    std::map<string, int> defaultProducts = {
+            pair<string, int>("Экран", 2),
+            pair<string, int>("Сцена", 2),
+            pair<string, int>("Акустическая система", 2),
+            pair<string, int>("DJ оборудование", 2),
+            pair<string, int>("Световое оформление", 2),
+            pair<string, int>("Баннер", 2),
+            pair<string, int>("Подиум", 2),
+            pair<string, int>("Дым-машина", 2),
+            pair<string, int>("Конфетти-машина", 2),
+            pair<string, int>("Радио-микрофон", 2),
+            pair<string, int>("Плазма", 2),
+            pair<string, int>("Ферма сценическа", 2),
+            pair<string, int>("Ферма Основание для ферм", 2),
+    };
+    return defaultProducts;
+}
+
+
 int test_initials(Map<RoadObject> & map) {
     //test insert
-    list<int> a = {1, 2, 3, 4, 5};
+    std::map<string, int>  a = {
+            pair<string, int>("Экран", 3),
+            pair<string, int>("Сцена", 1),
+            pair<string, int>("DJ оборудование", 2),
+            pair<string, int>("Подиум", 2),
+            pair<string, int>("Конфетти-машина", 1),
+            pair<string, int>("Радио-микрофон", 3),
+    };
     map.addStore(10, 15, "TestStore", a);
+    a = {
 
-    a = {6, 7, 8, 9, 10};
+            pair<string, int>("Световое оформление", 4),
+            pair<string, int>("Подиум", 1),
+            pair<string, int>("Дым-машина", 5),
+            pair<string, int>("Конфетти-машина", 4),
+            pair<string, int>("Ферма сценическа", 2),
+            pair<string, int>("Ферма Основание для ферм", 2),
+    };
     map.addStore(19, 50, "TestStore2", a);
 
-    a = {6, 7, 8, 9, 10};
+    a = {
+            pair<string, int>("DJ оборудование", 2),
+            pair<string, int>("Дым-машина", 1),
+            pair<string, int>("Конфетти-машина", 4),
+            pair<string, int>("Радио-микрофон", 2),
+            pair<string, int>("Плазма", 2),
+    };
     map.addStore(2, 47, "TestStore3", a);
 
-    a = {10, 8};
+    a = {
+            pair<string, int>("Баннер", 5),
+            pair<string, int>("Конфетти-машина", 5),
+    };
     map.addStore(4, 25, "TestStore4", a);
-}
+};
+
+
 
 int main() {
     Map<RoadObject> map = Map<RoadObject>(20,50);
     test_initials(map);
     test_road(map);
 
-    list<int> orderProducts = {1, 3, 5, 8};
-    map.processOrder(13, 17, 42, orderProducts);
+    std::map<string, int> orderProducts = {
+            pair<string, int>("Экран", 1),
+            pair<string, int>("Сцена", 1),
+            pair<string, int>("Баннер", 1),
+            pair<string, int>("DJ оборудование", 1),
+            pair<string, int>("Плазма", 1)
+    };
+    map.processOrder(13, 17, 100, orderProducts);
 
     int i =0 ;
 

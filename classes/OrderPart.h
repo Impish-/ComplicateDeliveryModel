@@ -17,12 +17,12 @@ private:
 public:
     int ID;
     list <pair<int, int>> path;
-    list<int> products;
+    std::map<string, int> products;
     pair<int, int> deliveryTo;
     pair<int, int> deliveryFrom;
 
     OrderPart() = default;
-    OrderPart(int fromOrderID, list<int> iproducts, list <pair<int, int>> ipath, pair<int, int> ideliveryFrom,
+    OrderPart(int fromOrderID, std::map<string, int> iproducts, list <pair<int, int>> ipath, pair<int, int> ideliveryFrom,
             pair<int, int> ideliveryTo){
         ID=fromOrderID;
         products = iproducts;

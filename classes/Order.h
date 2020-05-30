@@ -25,21 +25,21 @@ class Order {
         bool expired = false;
         string customer;
         list<OrderPart *> parts;
-        list<int> waitingProducts;
-        list<int> deliveredProducts;
+        std::map<string, int> waitingProducts;
+        std::map<string, int> deliveredProducts;
 
         Order() = default;
-        Order(list<int>productIds, int ideliveryTime, pair<int,int> orderToCoords, list<pair<list<int>,
-                list<T>>> ideals,  map<int, map<int, T >>& items){
+        Order(std::map<string, int>productsToOrder, int ideliveryTime, pair<int,int> orderToCoords,
+                list<pair<std::map<string, int>, list<T> >> ideals,  map<int, map<int, T >>& items){
             this->customer = "Неведомый";
             this->deliveryTime = ideliveryTime;
-            this->waitingProducts = productIds;
+            this->waitingProducts = productsToOrder;
 
-            for (pair<list<int>, list<T>> deal : ideals){
+            for (pair<std::map<string, int>, list<T>> deal : ideals){
                 if (deal.second.size() == 0) { continue;}
                 list <pair<int, int>> pathCoords;
                 Store * store = NULL;
-                for (auto x: deal.second){
+                for (T x: deal.second){
                     if (store == NULL){
                         store = items[x.XCoord][x.YCoord].store;
                     }
@@ -70,8 +70,8 @@ class Order {
                 if (!part->getDeliveredStatus()){
                     continue;
                 }
-                for (auto pId: part->products){
-                    deliveredProducts.push_back(pId);
+                for (auto product: part->products){
+                    deliveredProducts[product.first] = product.second;
                 }
                 removePart.push_back(part);
             }

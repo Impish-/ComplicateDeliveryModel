@@ -18,13 +18,13 @@ class Store{
         string name;
         list<pair<int, OrderPart *>> schedule;
         list<OrderPart> deliveryNotify;
-        list<int> productIds;
+        map<string, int> productsAvailable;
         pair<int, int> coords;
 
         Store() = default;
-        Store(string iName,list<int> iproductIds, pair<int, int> icoords){
+        Store(string iName,map<string, int>products, pair<int, int> icoords){
             name = iName;
-            productIds = iproductIds;
+            productsAvailable = products;
             coords = icoords;
         };
 
@@ -44,16 +44,16 @@ class Store{
             part->setDeliveredStatus(true);
         };
 
-        bool checkSingleProductAvailable(int productID){
-            list<int>::iterator it;
-            it = std::find(productIds.begin(), productIds.end(), productID);
-            return (it != productIds.end());
+        bool checkSingleProductAvailable(string productName){
+            map<string, int>::iterator it;
+            it =productsAvailable.find(productName);
+            return (it !=  productsAvailable.end());
         }
 
-        list<int> checkProduct(list<int> orderProductIds){
-            list<int> result;
+        list<pair<string, int>> checkProduct(map<string, int> orderProductIds){
+            list<pair<string, int>> result;
             for (auto product : orderProductIds){
-                if(checkSingleProductAvailable(product))
+                if(checkSingleProductAvailable(product.first))
                     result.push_back(product);
             }
             return result;
@@ -73,11 +73,14 @@ class Store{
 
     json serialize(){
         json store;
-        store["productIds"] = json::array();
+        store["products"] = json::array();
         store["schedule"] = json::array();
         store["name"] = this->name;
-        for (auto x : this->productIds){
-            store["schedule"].push_back(x);
+        for (auto x : this->productsAvailable){
+            json product;
+            product['name'] = x.first;
+            product['countNow'] = x.second;
+            store["products"].push_back(product);
         };
         for (auto x : this->schedule){
             json schedule;

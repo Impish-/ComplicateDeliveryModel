@@ -31,11 +31,10 @@ public:
     };
 
 
-    void addOrder(list<int> productIds,  int deliveryTick,
-                    list<pair<list<int>,
-                    list<RoadObject>>> deals,
+    void addOrder(std::map<string, int> productsToOrder,  int deliveryTick,
+                    list<pair<std::map<string, int>, list<RoadObject>>> deals,
                     map<int, map<int, RoadObject >>& items){
-        activeOrder = new Order<RoadObject>(productIds, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
+        activeOrder = new Order<RoadObject>(productsToOrder, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
 
     void closeOrder(){

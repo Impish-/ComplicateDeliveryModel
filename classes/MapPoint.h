@@ -54,8 +54,8 @@ class MapPoint{
         int YCoord;
         Store* store = NULL;
 
-        void addStore(string name, list<int> iproductIds){
-             store = new Store(name, iproductIds, pair<int, int> (XCoord, YCoord));
+        void addStore(string name, map<string, int> iproductd){
+             store = new Store(name, iproductd, pair<int, int> (XCoord, YCoord));
         };
         void setCoords(int x, int y){
             XCoord = x;
