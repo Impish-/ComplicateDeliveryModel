@@ -151,7 +151,7 @@ auto make_request_handler(Map<RoadObject> * map){
                          std::map<string, int> orderProducts;
 
                          for (auto x : j2["products"]){
-                             orderProducts[x["name"]] = x["count"];
+                             orderProducts[x["name"]] = x["count"].get<int>();
                          }
                          try{
                              map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
@@ -178,15 +178,17 @@ auto make_request_handler(Map<RoadObject> * map){
                 router->http_post(R"(/store)",
                                   [map](auto req, auto params) mutable {
                                       std::string s = req->body();
+                                      cout << s <<endl;
                                       json j2 =  json::parse(s);
                                       string body = "OK";
                                       std::map<string, int> storeProducts;
 
-                                      for (auto x : j2["products"]){
-                                          storeProducts[x["name"]] = x["count"];
+                                      for (json x : j2["products"]){
+                                          storeProducts[x["name"].get<string>()] = x.at("count").get<int>();
                                       }
                                       try{
-                                          map->addStore(j2["point"]["x"], j2["point"]["y"], j2["name"], storeProducts);;
+                                          map->addStore(j2["point"]["x"].get<int>(),
+                                                  j2["point"]["y"].get<int>(), j2["name"], storeProducts);;
                                       } catch (...) {
 
                                       }

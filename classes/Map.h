@@ -346,7 +346,7 @@ class Map {
 
         void nextTick(int tickCount){
             currentTick = tickCount;
-            cout << "TICK: " << tickCount<<endl;
+//            cout << "TICK: " << tickCount<<endl;
             for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
