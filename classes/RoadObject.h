@@ -129,10 +129,6 @@ public:
 
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
-        if (XCoord == 10 & YCoord == 25){
-
-
-        }
         if (activeOrder !=NULL){
             activeOrder->checkExpired(tickCount);
         }
