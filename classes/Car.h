@@ -65,7 +65,7 @@ class Car {
             T oldRoad = items[current.XCoord][current.YCoord];
 
             if (current == wayTo){
-                cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
+//                cout << "\t\t"<< _str() <<"    -==ORDER DELIVERED==- " <<endl;
                 store.delivered(orderPart);
                 items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
                 return;
@@ -78,7 +78,7 @@ class Car {
                         current = items[road.XCoord] [road.YCoord].incomingCar(*this);
                         items[oldRoad.XCoord][oldRoad.YCoord] = oldRoad.outOffCar(*this);
                     } catch (RoadPointIsFull& ex){
-                        cout << "\t\t"<< _str() <<" CANT MOVIE, WAITING" <<endl;
+//                        cout << "\t\t"<< _str() <<" CANT MOVIE, WAITING" <<endl;
                         return;
                     }
                     break;
@@ -88,7 +88,7 @@ class Car {
                     continue;
                 }
             }
-            cout << "\t\t>>------- " << _str() << " CAR MOVIE: from  " << placedRoad._str() << " to ---->>  " << current._str() << "\n" << endl;
+//            cout << "\t\t>>------- " << _str() << " CAR MOVIE: from  " << placedRoad._str() << " to ---->>  " << current._str() << "\n" << endl;
             tickUpdated = tickCount;
             current.updateCar(*this);
             items[current.XCoord][current.YCoord] = current;

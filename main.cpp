@@ -5,7 +5,7 @@
 #include <restinio/all.hpp>
 #include <map>
 #include <string>
-
+using nlohmann::json;
 using router_t = restinio::router::express_router_t<>;
 
 void test_bad_order1(Map<RoadObject> & map){
@@ -66,7 +66,6 @@ std::map<string, int> getDefaultProducts(){
     return defaultProducts;
 }
 
-
 int test_initials(Map<RoadObject> & map) {
     //test insert
     std::map<string, int>  a = {
@@ -106,14 +105,8 @@ int test_initials(Map<RoadObject> & map) {
     map.addStore(4, 25, "TestStore4", a);
 };
 
-
-
-int main() {
-    Map<RoadObject> map = Map<RoadObject>(20,50);
-    test_initials(map);
-    test_road(map);
-
-//    std::map<string, int> orderProducts = {
+void test_order(Map<RoadObject> & map){
+    //    std::map<string, int> orderProducts = {
 //            pair<string, int>("Экран", 1),
 //            pair<string, int>("Сцена", 1),
 //            pair<string, int>("Баннер", 1),
@@ -126,34 +119,111 @@ int main() {
             pair<string, int>("Дым-машина", 3),
     };
 
-    map.processOrder(13, 17, 64, orderProducts);
+    try {
+        map.processOrder(13, 17, 64, orderProducts);
+    } catch (CantDeliveryException& ex) {
+        cout << ex.PrintMessage();
+    }
 
-    int i =0 ;
+}
 
-//    using my_traits_t2 = restinio::traits_t<
-//            restinio::asio_timer_manager_t,
-//            restinio::single_threaded_ostream_logger_t,
-//            router_t >;
+using my_router_t = restinio::router::express_router_t<>;
+
+auto make_request_handler(){
+    Map<RoadObject> * map = new Map<RoadObject>(20,50);
+    test_initials(*map); //stores
+    test_road(*map);
+//    test_order(map);
+    int i=0;
+
+    auto router = std::make_unique<my_router_t>();
+
+    router->http_get(R"(/)",
+                      [map, i](auto req, auto params) mutable {
+                          map->nextTick(i++);
+                          string body = map->serialize().dump();
+                          return req->create_response()
+                                    .set_body(std::move( body ))
+                                    .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                    .append_header("Access-Control-Allow-Origin", "*")
+                                    .done();
+                      });
+
+        router->http_post(R"(/order)",
+                     [map](auto req, auto params) mutable {
+                         std::string s = req->body();
+                         json j2 =  json::parse(s);
+                         string body = "OK";
+                         std::map<string, int> orderProducts;
+
+                         for (auto x : j2["products"]){
+                             orderProducts[x["name"]] = x["count"];
+                         }
+                         try{
+                             map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
+                         } catch (...) {
+
+                         }
+
+                         return req->create_response()
+                                 .set_body(std::move( body ))
+                                 .done();
+                     });
+
+    router->http_post(R"(/store)",
+                      [map](auto req, auto params) mutable {
+                          std::string s = req->body();
+                          json j2 =  json::parse(s);
+                          string body = "OK";
+                          std::map<string, int> orderProducts;
+
+                          for (auto x : j2["products"]){
+                              orderProducts[x["name"]] = x["count"];
+                          }
+                          try{
+                              map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
+                          } catch (...) {
+
+                          }
+
+                          return req->create_response()
+                                  .set_body(std::move( body ))
+                                  .done();
+                      });
+
+//    router->non_matched_request_handler([](auto req) {
+//        return req->create_response(404, "Unknown request")
+//                .connection_close()
+//                .done();
+//    });
+
+    return router;
+}
+
+int main() {
+    struct my_traits : public restinio::default_single_thread_traits_t {
+        using request_handler_t = my_router_t;
+    };
 
     restinio::run(
-            restinio::on_this_thread<>()
+            restinio::on_this_thread<my_traits>()
                     .address("localhost")
                     .port(8080)
-                    .request_handler([map, i ](auto req) mutable{
-                        map.nextTick(i++);
-                        if (i % 10 == 0){
-                            list<int> orderProducts = {1, 3, 5, 8};
-//                            map.processOrder(13, 17, i+1, orderProducts);
-                        }
-
-                        string body = map.serialize().dump();
-//                        std::cout <<"handler :"<< body << endl;
-                        return req->create_response()
-                                .set_body(std::move( body ))
-                                .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
-                                .append_header("Access-Control-Allow-Origin", "*")
-                                .done();
-                    })
+                    .request_handler(make_request_handler())
     );
     return 0;
 }
+//.request_handler([map, i](auto req) mutable{
+//map.nextTick(i++);
+//if (i % 70 == 0){
+//test_order(map);
+//}
+//
+//string body = map.serialize().dump();
+////                        std::cout <<"handler :"<< body << endl;
+//return req->create_response()
+//.set_body(std::move( body ))
+//.append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+//.append_header("Access-Control-Allow-Origin", "*")
+//.done();
+//})

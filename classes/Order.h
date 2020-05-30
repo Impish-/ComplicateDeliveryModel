@@ -18,7 +18,7 @@ template <class T>
 class Order {
     public:
         int deliveryTime;
-        int finishTime;
+        int finishTime = -1;
 
         bool finish = false;
 
@@ -94,7 +94,6 @@ class Order {
         order["deliveryTime"] = deliveryTime;
         order["finished"] = finish;
         order["expired"] = expired;
-
         return order;
     }
 

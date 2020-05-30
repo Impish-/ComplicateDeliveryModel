@@ -34,7 +34,8 @@ public:
     void addOrder(std::map<string, int> productsToOrder,  int deliveryTick,
                     list<pair<std::map<string, int>, list<RoadObject> *>> deals,
                     map<int, map<int, RoadObject >>& items){
-        activeOrder = new Order<RoadObject>(productsToOrder, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
+        this -> activeOrder = new Order<RoadObject>(productsToOrder, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
+        items[XCoord][YCoord] = *this;
     };
 
     void closeOrder(){
@@ -128,12 +129,16 @@ public:
 
 
     void nextTick(int tickCount, map<int, map<int, RoadObject >>& items){
+        if (XCoord == 10 & YCoord == 25){
+
+
+        }
         if (activeOrder !=NULL){
             activeOrder->checkExpired(tickCount);
         }
         if ((cars.size() < 1)) return;
         if (haveActions(tickCount)) return;
-        cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
+//        cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
 
 
         for ( auto car : cars ){
@@ -161,6 +166,7 @@ public:
         if (this->activeOrder != NULL) (
                 point["order"] = this->activeOrder->serialize()
         );
+
 //        cout << "- done"<<endl;
 //        cout << "STORE"  ;
         if (this->store != NULL){point["store"] = this->store->serialize();}

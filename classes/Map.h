@@ -336,14 +336,14 @@ class Map {
                 );
                 deals.push_back(orderPathPair);
             }
-
-            orderPoint.addOrder(productsToOrder, deliveryTime, deals, items);
-            items[x][y] = orderPoint;
+            T_RoadObjectType * orderPointPtr = &items[x][y];
+            orderPointPtr->addOrder(productsToOrder, deliveryTime, deals, items);
+            cout << "ORDER ADDED"<< endl;
         }
 
         void nextTick(int tickCount){
-            currentTick ++;
-            cout << "TICK" << tickCount<<endl;
+            currentTick = tickCount;
+            cout << "TICK: " << tickCount<<endl;
             for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
