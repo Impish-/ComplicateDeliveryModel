@@ -318,19 +318,7 @@ class Map {
                     if (payHere == 0) { continue;}
                     fullOrderComplete[product.first] += payHere;
                     orderHere[product.first] = payHere;
-
-//                    auto search = fullOrderComplete.find(product.first);
-//
-//                    if (search == fullOrderComplete.end()){
-//
-//
-//                    }else{
-//
-//                    }
-
                 }
-
-                // /можно зарефакторить
 
                 if (orderHere.size() == 0){
                     continue;

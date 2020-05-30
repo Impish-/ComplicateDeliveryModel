@@ -29,6 +29,10 @@ class Store{
         };
 
         Store orderToSchedule(int ideliveryTime, OrderPart * orderPart){
+            for (auto p : orderPart->products){
+                //в общем резервируется сразу))
+                productsAvailable[p.first] -= p.second;
+            };
             schedule.push_back(pair<int, OrderPart*> (ideliveryTime, orderPart));
             return *this;
         };
@@ -42,6 +46,13 @@ class Store{
                     it++;
             }
             part->setDeliveredStatus(true);
+
+            // возвращается назад по факту доставки
+            for (auto p : part->products){
+                //в общем резервируется сразу))
+                productsAvailable[p.first] += p.second;
+            };
+
         };
 
         bool checkSingleProductAvailable(string productName){
