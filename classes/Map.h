@@ -52,6 +52,9 @@ class Map {
         allocator<T_RoadObjectType> typeAllocator;
         int currentTick =0;
     public:
+        int getTick(){return this->currentTick;};
+        bool runLoop = true;
+        bool loaded = true;
         Map(int m, int n){
             M=m;
             N=n;

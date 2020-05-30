@@ -129,18 +129,12 @@ void test_order(Map<RoadObject> & map){
 
 using my_router_t = restinio::router::express_router_t<>;
 
-auto make_request_handler(){
-    Map<RoadObject> * map = new Map<RoadObject>(20,50);
-    test_initials(*map); //stores
-    test_road(*map);
-//    test_order(map);
-    int i=0;
-
+auto make_request_handler(Map<RoadObject> * map){
     auto router = std::make_unique<my_router_t>();
 
     router->http_get(R"(/)",
-                      [map, i](auto req, auto params) mutable {
-                          map->nextTick(i++);
+                      [map](auto req, auto params) mutable {
+//                          map->nextTick(i++);
                           string body = map->serialize().dump();
                           return req->create_response()
                                     .set_body(std::move( body ))
@@ -170,40 +164,73 @@ auto make_request_handler(){
                                  .done();
                      });
 
-    router->http_post(R"(/store)",
+                    router->http_post(R"(/stopStartWorld)",
                       [map](auto req, auto params) mutable {
-                          std::string s = req->body();
-                          json j2 =  json::parse(s);
-                          string body = "OK";
-                          std::map<string, int> storeProducts;
 
-                          for (auto x : j2["products"]){
-                              storeProducts[x["name"]] = x["count"];
-                          }
-                          try{
-                              map->addStore(j2["point"]["x"], j2["point"]["y"], j2["name"], storeProducts);;
-                          } catch (...) {
-
-                          }
+                          map->runLoop = !map->runLoop;
+                          string body = (map->runLoop)? "started": "stopped";
 
                           return req->create_response()
                                   .set_body(std::move( body ))
                                   .done();
                       });
 
+                router->http_post(R"(/store)",
+                                  [map](auto req, auto params) mutable {
+                                      std::string s = req->body();
+                                      json j2 =  json::parse(s);
+                                      string body = "OK";
+                                      std::map<string, int> storeProducts;
+
+                                      for (auto x : j2["products"]){
+                                          storeProducts[x["name"]] = x["count"];
+                                      }
+                                      try{
+                                          map->addStore(j2["point"]["x"], j2["point"]["y"], j2["name"], storeProducts);;
+                                      } catch (...) {
+
+                                      }
+
+                                      return req->create_response()
+                                              .set_body(std::move( body ))
+                                              .done();
+                                  });
+
     return router;
 }
 
+
 int main() {
+    Map<RoadObject> * map = new Map<RoadObject>(20,50);
+    test_initials(*map); //stores
+    test_road(*map);
+
+    auto timer = [map]() mutable{
+        auto runTimer = [map]() mutable{
+            int i = map->getTick() ;
+            i++;
+            while (map->runLoop) {
+                map->nextTick(i++);
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+            while (!map->runLoop){
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+        };
+        while(map->loaded){
+            auto future = std::async(runTimer);
+        };
+    };
+    auto future = std::async(timer);
+
     struct my_traits : public restinio::default_single_thread_traits_t {
         using request_handler_t = my_router_t;
     };
-
     restinio::run(
             restinio::on_this_thread<my_traits>()
                     .address("localhost")
                     .port(8080)
-                    .request_handler(make_request_handler())
+                    .request_handler(make_request_handler(map))
     );
     return 0;
 }
