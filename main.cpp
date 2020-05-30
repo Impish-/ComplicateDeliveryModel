@@ -175,13 +175,13 @@ auto make_request_handler(){
                           std::string s = req->body();
                           json j2 =  json::parse(s);
                           string body = "OK";
-                          std::map<string, int> orderProducts;
+                          std::map<string, int> storeProducts;
 
                           for (auto x : j2["products"]){
-                              orderProducts[x["name"]] = x["count"];
+                              storeProducts[x["name"]] = x["count"];
                           }
                           try{
-                              map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
+                              map->addStore(j2["point"]["x"], j2["point"]["y"], j2["name"], storeProducts);;
                           } catch (...) {
 
                           }
