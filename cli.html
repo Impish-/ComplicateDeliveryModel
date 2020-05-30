@@ -256,8 +256,8 @@
              console.log(store)
              var oReq = new XMLHttpRequest();
              oReq.open('post', API_URL + '/store', true);
-             console.log(JSON.stringify(store))
              oReq.send(JSON.stringify(store));
+             return cellClick(x, y);
            });
 
           return;
