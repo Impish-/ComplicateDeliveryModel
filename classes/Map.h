@@ -232,8 +232,7 @@ class Map {
            canDeliveryProducts.clear();
            for ( auto X : items ){
                 for ( auto Y : X.second ){
-                    list<RoadObject> path = getPathList(Y.second, orderTo);
-                    int canditateDeliveryTime = pathCalcDeliveryTime(path);
+                    int canditateDeliveryTime = pathCalcDeliveryTime(getPathList(Y.second, orderTo));
                     if(canditateDeliveryTime > availTime) { continue;}
                     if (Y.second.store == NULL) { continue;};
                     if (Y.second.store->checkProduct(productsToOrder).size() == 0){ continue;}
@@ -266,11 +265,15 @@ class Map {
            return (canDeliveryProducts.size() == productsToOrder.size());
         }
 
+        void validationDelivery(){
+
+       }
+
         void processOrder(int x, int y, int deliveryTime, std::map<string, int> productsToOrder){
             T_RoadObjectType orderPoint = getElement(x, y);
             list<pair<pair<Store*, map<string, int>>, int>> candidates;
 
-            int deliveryAvailableInterval = deliveryTime - currentTick;
+            int deliveryAvailableInterval = deliveryTime - this->currentTick;
             if (deliveryAvailableInterval <= 0){
                 throw PastIntervalException();
             };
@@ -296,18 +299,15 @@ class Map {
             }
 
             map<string, int> canDeliveryProducts;
-            auto * dealsP1 = new list<
-                    pair<std::map<string, int>, T_RoadObjectType >
-            >;
-
+            list<pair<std::map<string, int>, list<T_RoadObjectType> * >> deals;
             for (auto deliveryCandidate : candidates){
-                std::map<string, int> orderHere;
-                orderHere.clear();
                 RoadObject storePoint =
                         getElement(
                                 deliveryCandidate.first.first->coords.first,
                                 deliveryCandidate.first.first->coords.second
                                 );
+                std::map<string, int> orderHere;
+                orderHere.clear();
 
                 // можно зарефакторить (сщбираем заказ у конкретного Store)
                 for (pair<string, int> product: deliveryCandidate.first.second){
@@ -322,37 +322,28 @@ class Map {
 
                 }
                 // /можно зарефакторить
+
                 if (orderHere.size() == 0){
                     continue;
                 }
 
-
-               dealsP1->push_back( pair<std::map<string, int>, T_RoadObjectType> (
+                auto  pathFromStore = new list<RoadObject>;
+                list<RoadObject> generatedPath = this->getPathList(storePoint, orderPoint, *pathFromStore);
+                pathFromStore->assign(generatedPath.begin(), generatedPath.end());
+                auto orderPathPair = pair<std::map<string, int>, list<T_RoadObjectType> *> (
                         orderHere,
-                        storePoint
-                ));
+                        pathFromStore
+                );
+                deals.push_back(orderPathPair);
             }
 
-            list<
-                    pair<
-                            std::map<string, int>,
-                            list<T_RoadObjectType>
-                    >
-            > dealsP2;
-
-
-
-            for (auto d: *dealsP1){
-                list<RoadObject> path__ = getPathList(d.second, orderPoint);
-
-            }
-
-//            orderPoint.addOrder(productsToOrder, deliveryTime, dealsP2, items);
-//            items[x][y] = orderPoint;
+            orderPoint.addOrder(productsToOrder, deliveryTime, deals, items);
+            items[x][y] = orderPoint;
         }
 
         void nextTick(int tickCount){
-           currentTick ++;
+            currentTick ++;
+            cout << "TICK" << tickCount<<endl;
             for ( auto X : items ){
                 for ( auto Y : X.second ){
                     if (Y.second.store == NULL){ Y.second.nextTick(tickCount, items); continue;}
@@ -370,8 +361,10 @@ class Map {
                     Y.second.nextTick(tickCount, items);
                 };
             }
+
         };
         json serialize(){
+
             json mapJSON;
             mapJSON["points"] = json::array();
             for ( auto X : items ) {

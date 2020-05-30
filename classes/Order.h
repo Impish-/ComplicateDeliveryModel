@@ -30,16 +30,16 @@ class Order {
 
         Order() = default;
         Order(std::map<string, int>productsToOrder, int ideliveryTime, pair<int,int> orderToCoords,
-                list<pair<std::map<string, int>, list<T> >> ideals,  map<int, map<int, T >>& items){
+                list<pair<std::map<string, int>, list<T> *>> ideals,  map<int, map<int, T >>& items){
             this->customer = "Неведомый";
             this->deliveryTime = ideliveryTime;
             this->waitingProducts = productsToOrder;
 
-            for (pair<std::map<string, int>, list<T>> deal : ideals){
-                if (deal.second.size() == 0) { continue;}
+            for (pair<std::map<string, int>, list<T> * > deal : ideals){
+                if (deal.second->size() == 0) { continue;}
                 list <pair<int, int>> pathCoords;
                 Store * store = NULL;
-                for (T x: deal.second){
+                for (T x: *deal.second){
                     if (store == NULL){
                         store = items[x.XCoord][x.YCoord].store;
                     }

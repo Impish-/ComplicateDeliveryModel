@@ -119,7 +119,7 @@ int main() {
             pair<string, int>("DJ оборудование", 1),
             pair<string, int>("Плазма", 1)
     };
-    map.processOrder(13, 17, 100, orderProducts);
+    map.processOrder(13, 17, 50, orderProducts);
 
     int i =0 ;
 

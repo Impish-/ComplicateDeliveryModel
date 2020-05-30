@@ -32,7 +32,7 @@ public:
 
 
     void addOrder(std::map<string, int> productsToOrder,  int deliveryTick,
-                    list<pair<std::map<string, int>, list<RoadObject>>> deals,
+                    list<pair<std::map<string, int>, list<RoadObject> *>> deals,
                     map<int, map<int, RoadObject >>& items){
         activeOrder = new Order<RoadObject>(productsToOrder, deliveryTick, pair<int,int> (XCoord, YCoord), deals, items);
     };
@@ -151,12 +151,12 @@ public:
             activeOrder->checkParts(tickCount);
         }
     };
+
     json serialize(){
         json point;
         point["x"] = this->XCoord;
         point["y"] = this->YCoord;
 //        cout << "\nSERIALIZE X:" << XCoord << ", Y:" << YCoord <<endl;
-//
 //        cout << "ORDERS";
         if (this->activeOrder != NULL) (
                 point["order"] = this->activeOrder->serialize()

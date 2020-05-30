@@ -78,8 +78,8 @@ class Store{
         store["name"] = this->name;
         for (auto x : this->productsAvailable){
             json product;
-            product['name'] = x.first;
-            product['countNow'] = x.second;
+            product["name"] = x.first;
+            product["count"] = x.second;
             store["products"].push_back(product);
         };
         for (auto x : this->schedule){
