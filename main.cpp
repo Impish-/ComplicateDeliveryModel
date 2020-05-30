@@ -161,8 +161,8 @@ auto make_request_handler(){
                          }
                          try{
                              map->processOrder(j2["point"]["x"], j2["point"]["y"], j2["deliveryTick"], orderProducts);
-                         } catch (...) {
-
+                         } catch (CantDeliveryException& ex) {
+                             body = "FAIL";
                          }
 
                          return req->create_response()
@@ -191,12 +191,6 @@ auto make_request_handler(){
                                   .done();
                       });
 
-//    router->non_matched_request_handler([](auto req) {
-//        return req->create_response(404, "Unknown request")
-//                .connection_close()
-//                .done();
-//    });
-
     return router;
 }
 
@@ -213,17 +207,3 @@ int main() {
     );
     return 0;
 }
-//.request_handler([map, i](auto req) mutable{
-//map.nextTick(i++);
-//if (i % 70 == 0){
-//test_order(map);
-//}
-//
-//string body = map.serialize().dump();
-////                        std::cout <<"handler :"<< body << endl;
-//return req->create_response()
-//.set_body(std::move( body ))
-//.append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
-//.append_header("Access-Control-Allow-Origin", "*")
-//.done();
-//})
