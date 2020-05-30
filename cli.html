@@ -119,21 +119,21 @@
 
   <div class = "toolPanel">
     <menuText>Выберите оборудование:</menuText>
-    <form method="post" name="drop_down_box">
-      <select name="menu" size="12" multiple="multiple" style="width: 90%;">
-        <option value="screen">Экран</option>
-        <option value="scene">Сцена</option>
-        <option value="acoustic">Акустическая система</option>
-        <option value="dj">DJ оборудование</option>
-        <option value="light">Световое оформление</option>
-        <option value="banner">Баннер</option>
-        <option value="podium">Подиум</option>
-        <option value="smoke">Дым-машина</option>
-        <option value="confetti">Конфетти-машина</option>
-        <option value="radiomcp">Радио-микрофон</option>
-        <option value="plazma">Плазма</option>
-        <option value="ferma">Ферма сценическая</option>
-        <option value="fermbase">Основание для ферм</option>
+    <form id="OrderForm" name="drop_down_box">
+      <select id="products" name="menu" size="12" multiple="multiple" style="width: 90%;">
+        <option value="Экран">Экран</option>
+        <option value="Сцена">Сцена</option>
+        <option value="Акустическая система">Акустическая система</option>
+        <option value="DJ оборудование">DJ оборудование</option>
+        <option value="Световое оформление">Световое оформление</option>
+        <option value="Баннер">Баннер</option>
+        <option value="Подиум">Подиум</option>
+        <option value="Дым-машина">Дым-машина</option>
+        <option value="Конфетти-машина">Конфетти-машина</option>
+        <option value="Радио-микрофон">Радио-микрофон</option>
+        <option value="Плазма">Плазма</option>
+        <option value="Ферма сценическая">Ферма сценическая</option>
+        <option value="Основание для ферм">Основание для ферм</option>
       </select>
     </form>
   </div>
@@ -149,11 +149,18 @@
   </div>
 
   <div class="toolPanel" >
-    <div style="padding-bottom: 5px;"><button id="button" ><menuText>ПОСТРОИТЬ БЛИЖАЙШИЕ</menutext></button></div>
-    <button id="button"><menuText>ЗАКАЗАТЬ</menutext></button>
+<!--    <div style="padding-bottom: 5px;"><button id="button" ><menuText>ПОСТРОИТЬ БЛИЖАЙШИЕ</menutext></button></div>-->
+    <button id="submitOrder"><menuText>УТОЧНИТЬ КОЛИЧЕСТВО</menutext></button>
   </div>
+  <div>
+    <hr/>
+    <div id="orderOroductsCount">
 
+    </div>
+    <div id="orderProductsCountSubmitDiv">
 
+    </div>
+  </div>
 
 
 </div>
@@ -202,6 +209,50 @@
     let ct = $( "#c-"+1+"-"+1);
     ct.append('<i class="fas fa-cat"></i>')
 
+
+    let submitOrder = (e) => {
+      e.preventDefault();
+
+      var itemsTable = $('<table id="productsCountTable"></table>').addClass(this.tableClass);
+      var tr = $('<tr></tr>') //creates row
+      var th = $('<th></th>') //creates table header cells
+      var td = $('<td></td>') //creates table cells
+      var tbody = $('<tbody></tbody>');
+      $('#products').val().forEach(function(d) {
+        var row = tr.clone() //creates a row
+        row.append(td.clone().text(d)) //fills in the row
+        row.append(td.clone().html('<input type="number" id="'+d+'">')) //fills in the row
+        tbody.append(row) //puts row on the tbody
+      })
+      $('#orderOroductsCount').html(itemsTable.html(tbody));
+      $('#orderProductsCountSubmitDiv').html('<button id="submitFullOrder"><menuText>ЗАКАЗАТЬ</menutext></button>');
+
+      $('#submitFullOrder').click((e) => {
+
+        let order = {
+          deliveryTick: parseInt($("#deliveryTime").val()),
+          point: {x: parseInt($("#x").val()), y: parseInt($("#y").val())},
+          products: [],
+        }
+
+        if (!order.point.x || !order.point.y ){
+          alert("Выберите координаты доставки (клик по дороге)")
+        }
+
+        $('#products').val().forEach(function(d) {
+          order.products.push({
+            name: d,
+            count: parseInt($('#'+d).val())
+          })
+        })
+        console.log(order);
+        var oReq = new XMLHttpRequest();
+        oReq.open('post', API_URL + '/order', true);
+        oReq.send(JSON.stringify(order));
+      })!order.point.x
+    }
+
+    $("#submitOrder").click(submitOrder)
 
     let cellClick = (x, y) => {
       let ct = $( "#c-"+x+"-"+y)
