@@ -370,6 +370,8 @@ class Map {
 
             json mapJSON;
             mapJSON["points"] = json::array();
+            mapJSON["timeTick"] = this->currentTick;
+
             for ( auto X : items ) {
                 for (auto Y : X.second) {
                     if (Y.second.XCoord>0 & Y.second.YCoord>0)

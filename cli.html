@@ -48,10 +48,22 @@
     #content { /* Правая колонка */
       margin: 10px 5px 20px 25%; /* Значения отступов */
       padding: 5px; /* Поля вокруг текста */
-      width: 1013px;
+      width: 70%;
       height: 962px;
       left: 363px;
       top: 62px;
+    }
+    #details { /* Левая колонка */
+      float: right; /* Обтекание справа */
+      position: absolute;
+      width: 15%;
+      height: 582px;
+      right: 0px;
+      top: 62px;
+      background: #F9F9F9;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      padding: 5px; /* Поля вокруг текста */
+      margin: 10px 10px 20px 15px; /* Значения отступов */
     }
     #footer { /* Нижний блок */
       background: #333; /* Цвет фона */
@@ -81,15 +93,23 @@
     }
 
   </style>
-  <script src="https://kit.fontawesome.com/yourcode.js"></script>
   <script   src="https://code.jquery.com/jquery-3.5.1.slim.min.js"   integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="   crossorigin="anonymous"></script>
 </head>
 <body>
-<div id="header"></div>
+<div id="header" style="width:100%; height: 50px; text-align: center;">
+  <div style="width:400px; height: 100px; margin: auto;">
+    <h2 style="float: left; padding-right: 20px;"> Миру </h2>
+    <h2 style="float: left; margin-right: 20px;"id="counter"></h2>
+    <h2 style="float: left; margin-right: 20px;"> Тиков </h2>
+  </div>
+</div>
 <div id="sidebar">
   <div class="toolPanel">
-    <menuText>Укажите координаты доставки:</menuText>
-    <button id="button"><menuText>Указать на карте</menutext></button>
+    <menuText>Выберите координаты доставки на карте:</menuText>
+    <div>
+      X: <input type="text" id="x" disabled>Y:<input type="text" id="y" disabled>
+    </div>
+<!--    <button id="button"><menuText>Указать на карте</menutext></button>-->
   </div>
 
   <div class = "toolPanel">
@@ -113,14 +133,14 @@
     </form>
   </div>
 
-  <div class="toolPanel">
-    <menuText>Укажите длительность аренды:</menuText>
-    <input class="textInput" type="text">
-  </div>
+<!--  <div class="toolPanel">-->
+<!--    <menuText>Укажите длительность аренды:</menuText>-->
+<!--    <input class="textInput" type="text">-->
+<!--  </div>-->
 
   <div class="toolPanel">
     <menuText>Укажите время доставки:</menuText>
-    <input class="textInput" type="text">
+    <input id="deliveryTime", class="textInput" type="text">
   </div>
 
   <div class="toolPanel" >
@@ -137,6 +157,8 @@
     let selected_point;
   </script>
   <script type="text/javascript">
+
+
     var BOARD, VALUE, LINP = new Array(0, 0, 4, 20, 100, 500, 0);
     function sgn(T) {
       if (T<0) T=-1;
@@ -146,7 +168,7 @@
     }
     function INICIAL() {
       var I, J, tr;
-      var f = '<table id="contentTable" style="border: none; border-collapse:collapse;">';
+      var f = '<table id="contentTable" style="border: none; border-collapse:collapse; width: 80%; float: left">';
       BOARD = new Array();
       VALUE = new Array();
       LINP = new Array();
@@ -156,7 +178,7 @@
         VALUE[I] = new Array();
         LINP[I] = new Array();
         for (J=0; J<=50; J++) {
-          if (I*J>0 && I<50 && J<1000) tr += '<td id="c-'+I+'-'+J+'" onclick="selected_point(this);" style="font-family: Tahoma, Helvetica, Sans Serif; border: 1px dotted #00a; cursor: pointer; width: 20px; font-weight: bold; text-align: center; vertical-align: middle; font-size: 16px; line-height: 20px">&nbsp;</td>';
+          if (I*J>0 && I<50 && J<1000) tr += '<td data-x =I data-y=J id="c-'+I+'-'+J+'" onclick="cellClick('+I+','+J+')" style="font-family: Tahoma, Helvetica, Sans Serif; border: 1px dotted #00a; cursor: pointer; width: 20px; font-weight: bold; text-align: center; vertical-align: middle; font-size: 16px; line-height: 20px">&nbsp;</td>';
           VALUE[I][J] = new Array();
           LINP[I][J] = new Array();
           for(C=1;C<3;C++) { LINP[I][J][C] = new Array(); }
@@ -169,13 +191,55 @@
     INICIAL()
   </script>
   <script>
+    let selected = null;
     let ct = $( "#c-"+1+"-"+1);
     ct.append('<i class="fas fa-cat"></i>')
 
+
+    let cellClick = (x, y) => {
+      let ct = $( "#c-"+x+"-"+y)
+      if (ct.data( "isRoad")){
+          $('#x').val(x);
+          $('#y').val(y);
+      }
+      let point = ct.data( "data");
+      let selT = $("#selectedTitle");
+      let selCT = $("#selectedContent");
+      // console.log(point)
+
+      var itemsTable = $('<table></table>').addClass(this.tableClass);
+      var tr = $('<tr></tr>') //creates row
+      var th = $('<th></th>') //creates table header cells
+      var td = $('<td></td>') //creates table cells
+      var tbody = $('<tbody></tbody>');
+
+      if (ct.data( "isStore")){
+        console.log(point.store);
+          selT.text(point.store.name)
+
+        point.store.products.forEach(function(d) {
+          var row = tr.clone() //creates a row
+          row.append(td.clone().text(d.name)) //fills in the row
+          row.append(td.clone().text(d.count)) //fills in the row
+          tbody.append(row) //puts row on the tbody
+        })
+          selCT.html(itemsTable.html(tbody))
+      }
+
+      if (ct.data( "isOrder")){
+        console.log(point.store);
+        selT.html(point.store.name)
+      }
+    }
+
     function reqListener() {
       var data = JSON.parse(this.responseText);
+      $("#counter").html(data.timeTick);
+      $("#deliveryTime").val(data.timeTick +60);
       data.points.forEach(function callback(point, index) {
         let ct = $( "#c-"+point.x+"-"+point.y)
+        ct.data( "isRoad", true );
+        ct.data( "data", point);
         ct.css("background", "#a9a9a9");
 
         if (point.cars){
@@ -184,6 +248,8 @@
         }
 
         if (point.order){
+          ct.data( "isOrder", true );
+          ct.data( "isRoad", false );
           console.log(point.order);
           if(point.order.finished){// доставлено
             (point.order.expired)?
@@ -196,6 +262,8 @@
           }
         }
         if (point.store){
+          ct.data( "isStore", true );
+          ct.data( "isRoad", false );
           ct.css("background", "#ea0747");
 
         }
@@ -218,11 +286,16 @@
         oReq.send();
         loop()
       }
-      window.setTimeout(doReq, 2000);
+      window.setTimeout(doReq, 1000);
     }
     loop()
   </script>
+  <div id="details">
+    <h1 id="selectedTitle"></h1>
+    <div id="selectedContent"></div>
+  </div>
 </div>
+
 </body>
 </html>
 
