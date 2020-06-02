@@ -1,6 +1,7 @@
 #ifndef MDILIVERY_ROADOBJECT_H
 #define MDILIVERY_ROADOBJECT_H
 
+#include <deque>
 #include "MapPoint.h"
 #include "../json.hpp"
 
@@ -24,6 +25,34 @@ public:
 
     RoadObject() {XCoord=-1; YCoord=-1;};
     RoadObject(int x, int y){XCoord = x;YCoord = y; activeOrder = NULL;};
+
+
+    std::deque<std::vector<unsigned char>> m_chunks;
+    std::size_t m_available = 0;
+    unsigned char* m_memory;
+    int m_allocations = 0;
+
+    void* allocate(std::size_t n) {
+        if (n > m_available) {
+            m_chunks.emplace_back(100500);
+            m_available = m_chunks.back().size();
+            m_memory = &m_chunks.back().front();
+        }
+
+        auto mem = m_memory;
+        m_available -= n;
+        m_memory += n;
+        ++m_allocations;
+        return mem;
+    }
+    void deallocate(void* p, std::size_t n) {
+        --m_allocations;
+        auto mem = (unsigned char*)p;
+        if (mem + n == m_memory) {
+            m_memory = mem;
+            m_available += n;
+        }
+    }
 
 
     bool operator == (const RoadObject other){
