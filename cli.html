@@ -112,7 +112,7 @@
   <div class="toolPanel">
     <menuText>Выберите координаты доставки на карте(дороги):</menuText>
     <div>
-      X: <input type="text" id="x" disabled>Y:<input type="text" id="y" disabled>
+      X: <input type="text" id="x" disabled style="width: 50px">Y:<input type="text" id="y" disabled style="width: 50px">
     </div>
 <!--    <button id="button"><menuText>Указать на карте</menutext></button>-->
   </div>
@@ -203,9 +203,59 @@
     INICIAL()
   </script>
   <script>
-    // let API_URL = 'http://127.0.0.1:8080';
-    let API_URL = 'http://194.67.91.25:8080';
+
+  </script>
+  <script>
+    let API_URL = 'http://127.0.0.1:8080';
+    // let API_URL = 'http://194.67.91.25:8080';
     let selected = null;
+    let auth = false;
+    let admin = false;
+
+    let login = ()  => {
+      if (!auth){
+        $("#content").hide()
+        $("#sidebar").hide()
+        $('body').append("<div id='loginBlock'>" +
+                "Login:<input id='login' type='text'>" +
+                "Password<input id='pass' type='text'>" +
+                "<a href='#' id='submitLogin'>авторизоваться как админ</a>/ " +
+                "<a href='#' id='userLogin'>Продолжить без авторизации</a>"+ "</div>");
+        $('#submitLogin').click((e) => {
+          var oReq = new XMLHttpRequest();
+          oReq.onload = (a)=>{
+            var data = JSON.parse(a.srcElement.responseText);
+            admin = data["token"];
+            console.log(data["token"])
+            $("#content").show()
+            $("#sidebar").show()
+            $('#loginBlock').hide()
+          };
+          oReq.open('post', API_URL + '/login', true);
+          let authData = {
+            "login": $('#login').val(),
+            "password": $('#pass').val()
+          }
+          console.log(authData)
+
+          oReq.send(JSON.stringify(authData));
+        });
+        $('#userLogin').click((e) =>{
+
+          auth = true;
+          $("#content").show()
+          $("#sidebar").show()
+          $('#loginBlock').hide()
+
+          return login()
+        });
+
+      }
+    }
+    login()
+
+
+
     let ct = $( "#c-"+1+"-"+1);
     ct.append('<i class="fas fa-cat"></i>')
 
@@ -256,10 +306,10 @@
 
     let cellClick = (x, y) => {
       let ct = $( "#c-"+x+"-"+y)
-      if (ct.data( "isRoad")){
-          $('#x').val(x);
-          $('#y').val(y);
-      }
+
+      $('#x').val(x);
+      $('#y').val(y);
+
       let point = ct.data( "data");
       let selT = $("#selectedTitle");
       let selCT = $("#selectedContent");
@@ -321,23 +371,40 @@
       var tbody = $('<tbody></tbody>');
 
       if (ct.data( "isStore")){
-        console.log(point.store);
           selT.text(point.store.name)
 
         point.store.products.forEach(function(d) {
           var row = tr.clone() //creates a row
           row.append(td.clone().text(d.name)) //fills in the row
+                  // .html('<input type="number" id="'+d.replace(' ', '')+'">'))
+          row.append(td.clone().html('<input type="number" class="storeUpdate" id="store'+d.name.replace(' ', '')+'" value="'+d.count+'">'))
           row.append(td.clone().text(d.count)) //fills in the row
           tbody.append(row) //puts row on the tbody
         })
+        tbody.append("<hr /> <a href='#' id='updateStore'>Обновить</a>")
           selCT.html(itemsTable.html(tbody))
       }
 
+      $("#updateStore").click((e) =>{
+        store = {
+          point: {x:parseInt($('#x').val()), y:parseInt($('#y').val())},
+          products: []
+        }
+        point.store.products.forEach(function(d) {
+          store.products.push(d)
+        });
+        console.log(store)
+        var oReq = new XMLHttpRequest();
+        oReq.open('post', API_URL + '/store', true);
+        oReq.send(JSON.stringify(store));
+        return cellClick(x, y);
+      });
       if (ct.data( "isOrder")){
         console.log(point.store);
         selT.html(point.store.name)
       }
     }
+
 
     function reqListener() {
       var data = JSON.parse(this.responseText);

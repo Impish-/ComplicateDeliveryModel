@@ -55,6 +55,12 @@ class Store{
 
         };
 
+        void updateProducts(map<string, int> products){
+            for (auto p: products){
+                productsAvailable[p.first] = p.second;
+            }
+        }
+
         bool checkSingleProductAvailable(string productName){
             map<string, int>::iterator it;
             it =productsAvailable.find(productName);

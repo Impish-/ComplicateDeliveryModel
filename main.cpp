@@ -162,6 +162,8 @@ auto make_request_handler(Map<RoadObject> * map){
 
                          return req->create_response()
                                  .set_body(std::move( body ))
+                                 .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                 .append_header("Access-Control-Allow-Origin", "*")
                                  .done();
                      });
 
@@ -173,12 +175,22 @@ auto make_request_handler(Map<RoadObject> * map){
 
                           return req->create_response()
                                   .set_body(std::move( body ))
+                                  .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                  .append_header("Access-Control-Allow-Origin", "*")
                                   .done();
                       });
 
                 router->http_post(R"(/store)",
                                   [map](auto req, auto params) mutable {
                                       std::string s = req->body();
+                                      const auto token = req->header().get_field(
+                                              "auth" );
+
+                                      if (token !="q1wefsa^%)"){
+                                          return req->create_response(403, "No Accept")
+                                                  .done();
+                                      }
+
                                       cout << s <<endl;
                                       json j2 =  json::parse(s);
                                       string body = "OK";
@@ -196,8 +208,29 @@ auto make_request_handler(Map<RoadObject> * map){
 
                                       return req->create_response()
                                               .set_body(std::move( body ))
+                                              .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                              .append_header("Access-Control-Allow-Origin", "*")
                                               .done();
                                   });
+
+
+    router->http_post(R"(/login)",
+                      [map](auto req, auto params) mutable {
+                          std::string s = req->body();
+                          json j2 =  json::parse(s);
+                          string body = "";
+                          if (j2["login"].get<string>() == "admin" & j2["password"].get<string>() == "admin"){
+                              json resp;
+                              resp["token"] = "q1wefsa^%)";
+                              body = resp.dump();
+                          }
+
+                          return req->create_response()
+                                  .set_body(std::move( body ))
+                                  .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                  .append_header("Access-Control-Allow-Origin", "*")
+                                  .done();
+                      });
 
     return router;
 }

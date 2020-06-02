@@ -188,9 +188,11 @@ class Map {
                     };
             }
            newStorePoint.setCoords(x, y);
-            newStorePoint.addStore(name, products);
+            if (newStorePoint.store == NULL){
+                newStorePoint.addStore(name, products);
+            }
+           newStorePoint.store->updateProducts(products);
             items[x][y] = newStorePoint;
-
          };
 
        list <pair<int, int>> convertRoadObjectToCoords(list<RoadObject> way){
