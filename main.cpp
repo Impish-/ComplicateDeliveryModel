@@ -201,7 +201,7 @@ auto make_request_handler(Map<RoadObject> * map){
                                       }
                                       try{
                                           map->addStore(j2["point"]["x"].get<int>(),
-                                                  j2["point"]["y"].get<int>(), j2["name"], storeProducts);;
+                                                  j2["point"]["y"].get<int>(), j2["name"].get<string>(), storeProducts);;
                                       } catch (...) {
 
                                       }

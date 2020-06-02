@@ -225,7 +225,7 @@
           var oReq = new XMLHttpRequest();
           oReq.onload = (a)=>{
             var data = JSON.parse(a.srcElement.responseText);
-            admin = data["token"];
+            localStorage.setItem('token', data["token"]);
             console.log(data["token"])
             $("#content").show()
             $("#sidebar").show()
@@ -356,7 +356,10 @@
              };
              console.log(store)
              var oReq = new XMLHttpRequest();
+             let token = localStorage.getItem('token');
+             console.log(token);
              oReq.open('post', API_URL + '/store', true);
+             oReq.setRequestHeader('Auth', token);
              oReq.send(JSON.stringify(store));
              return cellClick(x, y);
            });
@@ -368,7 +371,7 @@
       var tr = $('<tr></tr>') //creates row
       var th = $('<th></th>') //creates table header cells
       var td = $('<td></td>') //creates table cells
-      var tbody = $('<tbody></tbody>');
+      var tbody = $('<tbody id="updatedStoretb"></tbody>');
 
       if (ct.data( "isStore")){
           selT.text(point.store.name)
@@ -377,7 +380,7 @@
           var row = tr.clone() //creates a row
           row.append(td.clone().text(d.name)) //fills in the row
                   // .html('<input type="number" id="'+d.replace(' ', '')+'">'))
-          row.append(td.clone().html('<input type="number" class="storeUpdate" id="store'+d.name.replace(' ', '')+'" value="'+d.count+'">'))
+          row.append(td.clone().html('<input type="number" class="storeUpdate" id="storeUp-'+d.name.replace(' ', '')+'" value="'+d.count+'">'))
           row.append(td.clone().text(d.count)) //fills in the row
           tbody.append(row) //puts row on the tbody
         })
@@ -386,17 +389,24 @@
       }
 
       $("#updateStore").click((e) =>{
-        store = {
+        storeUp = {
           point: {x:parseInt($('#x').val()), y:parseInt($('#y').val())},
+          name: $('#selectedTitle').text(),
           products: []
         }
+        console.log(point, "point")
         point.store.products.forEach(function(d) {
-          store.products.push(d)
+          let v = $("#storeUp-"+d.name.replace(' ', ''))
+          console.log("store"+d.name.replace(' ', ''), v)
+          d["count"] = parseInt(v.val());
+          storeUp.products.push(d)
         });
-        console.log(store)
+        console.log(storeUp)
         var oReq = new XMLHttpRequest();
+
         oReq.open('post', API_URL + '/store', true);
-        oReq.send(JSON.stringify(store));
+        oReq.setRequestHeader('auth', localStorage.getItem('token'))
+        oReq.send(JSON.stringify(storeUp));
         return cellClick(x, y);
       });
       if (ct.data( "isOrder")){
