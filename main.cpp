@@ -210,6 +210,7 @@ auto make_request_handler(Map<RoadObject> * map){
                                               .set_body(std::move( body ))
                                               .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
                                               .append_header("Access-Control-Allow-Origin", "*")
+                                              .append_header("Access-Control-Allow-Headers", "*")
                                               .done();
                                   });
 
@@ -229,8 +230,19 @@ auto make_request_handler(Map<RoadObject> * map){
                                   .set_body(std::move( body ))
                                   .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
                                   .append_header("Access-Control-Allow-Origin", "*")
+                                  .append_header("Access-Control-Allow-Headers", "*")
                                   .done();
                       });
+    router->non_matched_request_handler(
+            []( auto req ){
+                return
+                        req->create_response( 200, "any")
+                                .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                .append_header("Access-Control-Allow-Origin", "*")
+                                .append_header("Access-Control-Allow-Headers", "*")
+                                .done();
+            } );
+
 
     return router;
 }
