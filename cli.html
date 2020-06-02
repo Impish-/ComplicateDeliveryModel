@@ -407,7 +407,8 @@
         oReq.open('post', API_URL + '/store', true);
         oReq.setRequestHeader('auth', localStorage.getItem('token'))
         oReq.send(JSON.stringify(storeUp));
-        return cellClick(x, y);
+        // $('#updatedStoretb').html('')
+        // return cellClick(x, y);
       });
       if (ct.data( "isOrder")){
         console.log(point.store);
