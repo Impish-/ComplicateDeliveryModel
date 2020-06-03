@@ -284,8 +284,8 @@
           point: {x: parseInt($("#x").val()), y: parseInt($("#y").val())},
           products: [],
         }
-
-        if (!order.point.x || !order.point.y ){
+        let ct = $( "#c-"+order.point.x+"-"+order.point.y);
+        if (!ct.data('isRoad')){
           alert("Выберите координаты доставки (клик по дороге)")
         }
 
