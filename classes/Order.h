@@ -65,6 +65,7 @@ class Order {
         };
 
         void checkParts(int tickCount){
+            if (finish) {return;}
             list<OrderPart * > removePart;
             for (OrderPart * part : parts){
                 if (!part->getDeliveredStatus()){

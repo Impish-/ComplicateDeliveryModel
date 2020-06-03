@@ -287,8 +287,8 @@ int main() {
     };
     restinio::run(
             restinio::on_this_thread<my_traits>()
-                    .address("0.0.0.0")
-                    .port(80)
+                    .address("127.0.0.1")
+                    .port(8080)
                     .request_handler(make_request_handler(map))
     );
     return 0;

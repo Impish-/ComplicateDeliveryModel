@@ -161,16 +161,12 @@ public:
         if (activeOrder !=NULL){
             activeOrder->checkExpired(tickCount);
         }
-        if ((cars.size() < 1)) return;
-        if (haveActions(tickCount)) return;
+//        if ((cars.size() < 1)) return;
+//        if (haveActions(tickCount)) return;
 //        cout << "\t POINT HAVE ACTIONS:" << _str() << ", CARS HERE:" << cars.size()<<endl;
 
 
         for ( auto car : cars ){
-            if (car.tickUpdated == tickCount){
-                continue;
-            }
-
             if(car.tickUpdated >= tickCount){
                 continue;
             };
@@ -179,6 +175,13 @@ public:
 
         if (activeOrder !=NULL){
             activeOrder->checkParts(tickCount);
+            if (activeOrder->finish){
+                if(activeOrder->finishTime + 15 <= tickCount){
+                    activeOrder = NULL;
+                    items[this->XCoord][this->YCoord].activeOrder = NULL;
+                    delete activeOrder;
+                }
+            }
         }
     };
 
