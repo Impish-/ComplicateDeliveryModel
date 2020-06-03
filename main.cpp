@@ -151,7 +151,15 @@ auto make_request_handler(Map<RoadObject> * map){
                          std::map<string, int> orderProducts;
 
                          for (json x : j2["products"]){
-                             orderProducts[x["name"].get<string>()] = x["count"].get<int>();
+                             auto count = x["count"].get<int>();
+                             if (count > 50) {
+                                 json err;
+                                 err["error"] = "too many items";
+                                 return req->create_response(400, "No Accept")
+                                         .set_body(std::move( err.dump() ))
+                                         .done();
+                             }
+                             orderProducts[x["name"].get<string>()] = count;
                          }
                          try{
                              map->processOrder(j2["point"]["x"].get<int>(), j2["point"]["y"].get<int>(),
