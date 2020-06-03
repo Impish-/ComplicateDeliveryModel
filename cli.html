@@ -207,7 +207,7 @@
   </script>
   <script>
     // let API_URL = 'http://127.0.0.1:8080';
-    let API_URL = 'http://194.67.91.25:8080';
+    let API_URL = 'http://194.67.91.25';
     let selected = null;
     let auth = false;
     let admin = false;
@@ -418,6 +418,7 @@
 
 
     function reqListener() {
+      console.log(this.responseText)
       var data = JSON.parse(this.responseText);
       $("#counter").html(data.timeTick);
       $("#deliveryTime").val(data.timeTick +60);
