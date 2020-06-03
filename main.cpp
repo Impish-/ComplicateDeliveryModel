@@ -5,6 +5,7 @@
 #include <restinio/all.hpp>
 #include <map>
 #include <string>
+
 using nlohmann::json;
 using router_t = restinio::router::express_router_t<>;
 
@@ -132,7 +133,7 @@ using my_router_t = restinio::router::express_router_t<>;
 auto make_request_handler(Map<RoadObject> * map){
     auto router = std::make_unique<my_router_t>();
 
-    router->http_get(R"(/)",
+    router->http_get(R"(/tick)",
                       [map](auto req, auto params) mutable {
 //                          map->nextTick(i++);
                           string body = map->serialize().dump();
@@ -229,6 +230,17 @@ auto make_request_handler(Map<RoadObject> * map){
                           return req->create_response()
                                   .set_body(std::move( body ))
                                   .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
+                                  .append_header("Access-Control-Allow-Origin", "*")
+                                  .append_header("Access-Control-Allow-Headers", "*")
+                                  .done();
+                      });
+
+    router->http_get(R"(/)",
+                      [map](auto req, auto params) mutable {
+                          auto sf = restinio::sendfile( "cli.html");
+                          return req->create_response()
+                                  .set_body(std::move( sf ) )
+//                                  .append_header( restinio::http_field::content_type, "text/plain; charset=utf-8")
                                   .append_header("Access-Control-Allow-Origin", "*")
                                   .append_header("Access-Control-Allow-Headers", "*")
                                   .done();

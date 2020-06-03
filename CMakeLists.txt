@@ -10,14 +10,15 @@ else()
 endif()
 
 find_package(restinio CONFIG REQUIRED)
-
-
-
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(html)
+configure_file(${CMAKE_SOURCE_DIR}/cli.html ${CMAKE_CURRENT_BINARY_DIR}/bin/cli.html COPYONLY)
 add_executable(Mdilivery main.cpp classes/Map.h classes/Car.h
         classes/Order.h classes/Store.h classes/MapPoint.h
         classes/OrderPart.h classes/RoadObject.h  classes/exceptions.h)
 
+
 target_link_libraries(Mdilivery restinio::restinio)
 target_link_libraries(Mdilivery ${CONAN_LIBS})
+

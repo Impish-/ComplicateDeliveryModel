@@ -467,7 +467,7 @@
         var oReq = new XMLHttpRequest();
         oReq.onload = reqListener;
         oReq.onerror = reqError;
-        oReq.open('get', API_URL+"/tick", true);
+        oReq.open('get', API_URL, true);
 
         oReq.send();
         loop()
