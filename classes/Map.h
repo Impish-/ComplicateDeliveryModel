@@ -345,7 +345,7 @@ class Map {
             orderPointPtr->addOrder(productsToOrder, deliveryTime, deals, items);
             cout << "ORDER ADDED"<< endl;
         }
-
+        string jsonState;
         void nextTick(int tickCount){
             currentTick = tickCount;
 //            cout << "TICK: " << tickCount<<endl;
@@ -366,7 +366,7 @@ class Map {
                     Y.second.nextTick(tickCount, items);
                 };
             }
-
+            jsonState = serialize().dump();
         };
         json serialize(){
 

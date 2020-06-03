@@ -135,8 +135,7 @@ auto make_request_handler(Map<RoadObject> * map){
 
     router->http_get(R"(/tick)",
                       [map](auto req, auto params) mutable {
-//                          map->nextTick(i++);
-                          string body = map->serialize().dump();
+                          string body = map->jsonState;
                           return req->create_response()
                                     .set_body(std::move( body ))
                                     .append_header( restinio::http_field::content_type, "application/json; charset=utf-8")
