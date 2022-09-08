@@ -286,7 +286,7 @@ class Map {
             list<pair<pair<Store*, map<string, int>>, int>> candidates;
 
             int deliveryAvailableInterval = deliveryTime - this->currentTick;
-            if (deliveryAvailableInterval <= 0){
+            if (deliveryAvailableInterval <= 0){§§§§
                 throw PastIntervalException();
             };
             bool availDelivery = getDeliveryCandidates(productsToOrder, orderPoint, candidates, deliveryAvailableInterval);

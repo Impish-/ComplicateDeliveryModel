@@ -13,7 +13,7 @@ void test_bad_order1(Map<RoadObject> & map){
     // test unreal delivery time
     try {
         std::map<string, int> orderProducts = {
-                pair<string, int>("Экран", 2),
+               pair<string, int>("Экран", 2),
                pair<string, int>("Акустическая система", 2),
                pair<string, int>("Световое оформление", 2),
                pair<string, int>("Дым-машина", 2),
@@ -79,7 +79,6 @@ int test_initials(Map<RoadObject> & map) {
     };
     map.addStore(10, 15, "TestStore", a);
     a = {
-
             pair<string, int>("Световое оформление", 4),
             pair<string, int>("Подиум", 1),
             pair<string, int>("Дым-машина", 5),
@@ -155,7 +154,7 @@ auto make_request_handler(Map<RoadObject> * map){
                              if (count > 50) {
                                  json err;
                                  err["error"] = "too many items";
-                                 return req->create_response(400, "No Accept")
+                                 return req->create_response(400, "Bad Request")
                                          .set_body(std::move( err.dump() ))
                                          .done();
                              }
@@ -164,8 +163,12 @@ auto make_request_handler(Map<RoadObject> * map){
                          try{
                              map->processOrder(j2["point"]["x"].get<int>(), j2["point"]["y"].get<int>(),
                                      j2["deliveryTick"].get<int>(), orderProducts);
-                         } catch (CantDeliveryException& ex) {
-                             body = "FAIL";
+                         } catch (PastIntervalException& ex) {
+                             json err;
+                             err["error"] = "too late";
+                             return req->create_response(400, "Bad Request")
+                                     .set_body(std::move( err.dump() ))
+                                     .done();
                          }
 
                          return req->create_response()
@@ -177,7 +180,6 @@ auto make_request_handler(Map<RoadObject> * map){
 
                     router->http_post(R"(/stopStartWorld)",
                       [map](auto req, auto params) mutable {
-
                           map->runLoop = !map->runLoop;
                           string body = (map->runLoop)? "started": "stopped";
 
